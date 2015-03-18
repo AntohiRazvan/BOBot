@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Source\Dll.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildTask.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Licenta.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{412bbe7a-161c-4a11-bb92-451a35e7b0dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{a388a186-3082-438f-bb5d-f31c549bb9d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BuildingManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildTask.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Licenta.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
