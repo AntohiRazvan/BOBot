@@ -1,11 +1,15 @@
 #include "Licenta.h"
 #include <iostream>
+#include "..\BuildingManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
 
+BuildingManager buildingManager;
+
 void ExampleAIModule::onStart()
 {
+  
   // Hello World!
   Broodwar->sendText("Hello world!");
 
@@ -73,6 +77,8 @@ void ExampleAIModule::onFrame()
   // Latency frames are the number of frames before commands are processed.
   if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
     return;
+
+  buildingManager.Update();
 
   // Iterate through all the units that we own
   for (auto &u : Broodwar->self()->getUnits())
@@ -146,7 +152,7 @@ void ExampleAIModule::onFrame()
           Broodwar->getLatencyFrames());  // frames to run
 
         // Retrieve the supply provider type in the case that we have run out of supplies
-        UnitType supplyProviderType = u->getType().getRace().getSupplyProvider();
+ /*       UnitType supplyProviderType = u->getType().getRace().getSupplyProvider();
         static int lastChecked = 0;
 
         // If we are supply blocked and haven't tried constructing more recently
@@ -189,7 +195,7 @@ void ExampleAIModule::onFrame()
             }
           } // closure: supplyBuilder is valid
         } // closure: insufficient supply
-      } // closure: failed to train idle unit
+*/      } // closure: failed to train idle unit
 
     }
     if (u->getType() == BWAPI::UnitTypes::Protoss_Gateway){
@@ -210,7 +216,7 @@ void ExampleAIModule::BuildBarracks(Unit u){
 	static bool barracksBuilt = false;
 	
 	static int lastChecked = 0;
-	if (!barracksBuilt && lastChecked + 400 < Broodwar->getFrameCount()){
+	if (lastChecked + 400 < Broodwar->getFrameCount()){
 		if (Broodwar->canMake(BWAPI::UnitTypes::Protoss_Gateway, u)){
 			lastChecked = Broodwar->getFrameCount();
 			u->build(BWAPI::UnitTypes::Protoss_Gateway, Broodwar->getBuildLocation(BWAPI::UnitTypes::Protoss_Gateway, u->getTilePosition()));

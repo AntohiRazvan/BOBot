@@ -41,6 +41,9 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -90,14 +93,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BuildingManager.cpp" />
+    <ClCompile Include="BuildOrder.cpp" />
     <ClCompile Include="BuildTask.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\Licenta.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildingManager.h" />
+    <ClInclude Include="BuildOrder.h" />
     <ClInclude Include="BuildTask.h" />
+    <ClInclude Include="IManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Licenta.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Licenta.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,27 +12,67 @@ BuildTask::BuildTask(Unit builder, UnitType building)
   _progress = Progress::WAITING;
 }
 
-void BuildTask::execute()
+BuildTask::BuildTask(Unit builder, UnitType building, Priority priority)
 {
-  _builder->build(_building, _position);
+  _builder = builder;
+  _building = building;
+  _mineralPrice = building.mineralPrice();
+  _gasPrice = building.gasPrice();
+  _position = Broodwar->getBuildLocation(building, TilePosition(_builder->getPosition()), 15);
+  _progress = Progress::WAITING;
+  _priority = priority;
 }
 
-int BuildTask::getMineralPrice()
+void BuildTask::StartBuidling()
+{
+  _builder->build(_building, _position);
+  _progress = Progress::BUILDING;
+  _startTime = Broodwar->getFrameCount();
+}
+
+void BuildTask::SendBuilder()
+{
+  _builder->move(Position(_position));
+  _progress = Progress::WORKER_UNDERWAY;
+}
+
+bool BuildTask::WorkerArrived()
+{
+  if (_builder->getTilePosition().getDistance(_position) < 10)
+    return true;
+  return false;
+}
+
+int BuildTask::GetMineralPrice()
 {
   return _mineralPrice;
 }
 
-int BuildTask::getGasPrice()
+int BuildTask::GetGasPrice()
 {
   return _gasPrice;
 }
 
-int BuildTask::getPriority() const
+Priority BuildTask::GetPriority() const
 {
   return _priority;
 }
-
-Progress BuildTask::getProgress()
+ 
+Progress BuildTask::GetProgress()
 {
   return _progress;
+}
+
+UnitType BuildTask::GetBuildingType()
+{
+  return _building;
+}
+
+void BuildTask::SetProgress(Progress progress)
+{
+  _progress = progress;
+}
+
+int BuildTask::GetStartTime(){
+  return _startTime;
 }

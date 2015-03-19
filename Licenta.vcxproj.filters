@@ -13,6 +13,9 @@
     <ClCompile Include="Source\Licenta.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="BuildOrder.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -20,6 +23,9 @@
     </Filter>
     <Filter Include="Headers">
       <UniqueIdentifier>{a388a186-3082-438f-bb5d-f31c549bb9d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{9cf0e9b4-d995-4cc9-bbe9-6947c219c1fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,5 +38,15 @@
     <ClInclude Include="Source\Licenta.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="IManager.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOrder.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Licenta.rc" />
   </ItemGroup>
 </Project>
