@@ -59,7 +59,7 @@ void BuildingManager::StartBuildingCheck()
   for (vector<BuildTask*>::iterator it = _buildingsInProgress.begin();
        it != _buildingsInProgress.end(); it++)
   {
-    if ((*it)->WorkerArrived())
+    if ((*it)->WorkerArrived() && !(*it)->HasStarted())
     {
       (*it)->StartBuidling();
     }
@@ -71,9 +71,14 @@ void BuildingManager::FinishBuildingsCheck()
   for (vector<BuildTask*>::iterator buildTask = _buildingsInProgress.begin();
     buildTask != _buildingsInProgress.end();)
   {
+
+    int a = (*buildTask)->GetStartTime();
+    int b = (*buildTask)->GetBuildingType().buildTime();
+    int c = Broodwar->getFrameCount();
     if ((*buildTask)->GetStartTime() + (*buildTask)->GetBuildingType().buildTime() < Broodwar->getFrameCount())
     {
       map<UnitType, int>::iterator it = _buildingsMade.find((*buildTask)->GetBuildingType());
+
       if ((*buildTask)->GetBuildingType() == UnitTypes::Protoss_Pylon) pylonInQueue = false;
       
       if (it != _buildingsMade.end())

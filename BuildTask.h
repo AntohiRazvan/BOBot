@@ -20,6 +20,7 @@ private:
   int _mineralPrice;
   int _gasPrice;
   int _startTime;
+  bool _hasStarted = false;
   Priority _priority;
   Progress _progress;
 
@@ -37,4 +38,5 @@ public:
   void SetProgress(Progress progress);
   bool WorkerArrived();
   bool IsFinished();
+  bool HasStarted();
 };

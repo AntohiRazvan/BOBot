@@ -26,6 +26,13 @@ BuildTask::BuildTask(Unit builder, UnitType building, Priority priority)
 void BuildTask::StartBuidling()
 {
   _builder->build(_building, _position);
+  if ((Broodwar->getLastError() == Errors::Insufficient_Minerals) ||
+      (Broodwar->getLastError() == Errors::Insufficient_Gas))
+  {
+    SendBuilder();
+    return;
+  }
+  _hasStarted = true;
   _progress = Progress::BUILDING;
   _startTime = Broodwar->getFrameCount();
 }
@@ -73,6 +80,12 @@ void BuildTask::SetProgress(Progress progress)
   _progress = progress;
 }
 
-int BuildTask::GetStartTime(){
+int BuildTask::GetStartTime()
+{
   return _startTime;
+}
+
+bool BuildTask::HasStarted()
+{
+  return _hasStarted;
 }
