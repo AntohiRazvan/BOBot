@@ -1,15 +1,18 @@
 #include "Licenta.h"
 #include <iostream>
 #include "..\BuildingManager.h"
+#include "..\WorkerManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
 
-BuildingManager buildingManager;
+WorkerManager *workerManager; 
+BuildingManager buildingManager = 0; 
 
 void ExampleAIModule::onStart()
 {
-  
+ workerManager = new WorkerManager();
+ buildingManager = BuildingManager(workerManager);
   // Hello World!
   Broodwar->sendText("Hello world!");
 
@@ -79,6 +82,7 @@ void ExampleAIModule::onFrame()
     return;
 
   buildingManager.Update();
+  workerManager->Update();
 
   // Iterate through all the units that we own
   for (auto &u : Broodwar->self()->getUnits())
@@ -114,27 +118,7 @@ void ExampleAIModule::onFrame()
       if (barracksBuilder)
         BuildBarracks(barracksBuilder);
 
-      // if our worker is idle
-      if (u->isIdle())
-      {
-        // Order workers carrying a resource to return them to the center,
-        // otherwise find a mineral patch to harvest.
-        if (u->isCarryingGas() || u->isCarryingMinerals())
-        {
-          u->returnCargo();
-        }
-        else if (!u->getPowerUp())  // The worker cannot harvest anything if it
-        {                             // is carrying a powerup such as a flag
-          // Harvest from the nearest mineral patch or gas refinery
-          if (!u->gather(u->getClosestUnit(IsMineralField || IsRefinery)))
-          {
-            // If the call fails, then print the last error message
-            Broodwar << Broodwar->getLastError() << std::endl;
-          }
-
-        } // closure: has no powerup
-      } // closure: if idle
-
+      
     }
     else if (u->getType().isResourceDepot()) // A resource depot is a Command Center, Nexus, or Hatchery
     {
@@ -151,51 +135,7 @@ void ExampleAIModule::onFrame()
           nullptr,    // condition
           Broodwar->getLatencyFrames());  // frames to run
 
-        // Retrieve the supply provider type in the case that we have run out of supplies
- /*       UnitType supplyProviderType = u->getType().getRace().getSupplyProvider();
-        static int lastChecked = 0;
-
-        // If we are supply blocked and haven't tried constructing more recently
-        if (lastErr == Errors::Insufficient_Supply &&
-          lastChecked + 400 < Broodwar->getFrameCount() &&
-          Broodwar->self()->incompleteUnitCount(supplyProviderType) == 0)
-        {
-          lastChecked = Broodwar->getFrameCount();
-
-          // Retrieve a unit that is capable of constructing the supply needed
-          Unit supplyBuilder = u->getClosestUnit(GetType == supplyProviderType.whatBuilds().first &&
-            (IsIdle || IsGatheringMinerals) &&
-            IsOwned);
-          // If a unit was found
-          if (supplyBuilder)
-          {
-            if (supplyProviderType.isBuilding())
-            {
-              TilePosition targetBuildLocation = Broodwar->getBuildLocation(supplyProviderType, supplyBuilder->getTilePosition());
-              if (targetBuildLocation)
-              {
-                // Register an event that draws the target build location
-                Broodwar->registerEvent([targetBuildLocation, supplyProviderType](Game*)
-                {
-                  Broodwar->drawBoxMap(Position(targetBuildLocation),
-                    Position(targetBuildLocation + supplyProviderType.tileSize()),
-                    Colors::Blue);
-                },
-                  nullptr,  // condition
-                  supplyProviderType.buildTime() + 100);  // frames to run
-
-                // Order the builder to construct the supply structure
-                supplyBuilder->build(supplyProviderType, targetBuildLocation);
-              }
-            }
-            else
-            {
-              // Train the supply provider (Overlord) if the provider is not a structure
-              supplyBuilder->train(supplyProviderType);
-            }
-          } // closure: supplyBuilder is valid
-        } // closure: insufficient supply
-*/      } // closure: failed to train idle unit
+      } // closure: failed to train idle unit
 
     }
     if (u->getType() == BWAPI::UnitTypes::Protoss_Gateway){
@@ -213,18 +153,14 @@ void ExampleAIModule::onFrame()
 
 
 void ExampleAIModule::BuildBarracks(Unit u){
-	static bool barracksBuilt = false;
-	
+  /*
 	static int lastChecked = 0;
 	if (lastChecked + 400 < Broodwar->getFrameCount()){
 		if (Broodwar->canMake(BWAPI::UnitTypes::Protoss_Gateway, u)){
 			lastChecked = Broodwar->getFrameCount();
-			u->build(BWAPI::UnitTypes::Protoss_Gateway, Broodwar->getBuildLocation(BWAPI::UnitTypes::Protoss_Gateway, u->getTilePosition()));
-			barracksBuilt = !barracksBuilt;
-      if (Broodwar->getLastError() == Errors::Insufficient_Minerals)
-        barracksBuilt = !barracksBuilt;
-		}
-	}
+      buildingManager.AddBuildRequest(UnitTypes::Protoss_Gateway);
+    }
+	}*/
 }
 
 void ExampleAIModule::onSendText(std::string text)
@@ -303,6 +239,8 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
   {
 	  if (unit->getType() == UnitTypes::Protoss_Zealot)
 	  	nrOfZealots++;
+    if (unit->getType() == UnitTypes::Protoss_Probe)
+      workerManager->AddWorker(unit);
   }
 }
 

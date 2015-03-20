@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 
-BuildTask::BuildTask(Unit builder, UnitType building)
+BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManager)
 {
   _builder = builder;
   _building = building;
@@ -10,9 +10,12 @@ BuildTask::BuildTask(Unit builder, UnitType building)
   _gasPrice = building.gasPrice();
   _position = Broodwar->getBuildLocation(building, TilePosition(_builder->getPosition()), 15);
   _progress = Progress::WAITING;
+  _priority = Priority::LOW;
+  _startTime = 0;
+  _workerManager = workerManager;
 }
 
-BuildTask::BuildTask(Unit builder, UnitType building, Priority priority)
+BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManager, Priority priority)
 {
   _builder = builder;
   _building = building;
@@ -21,6 +24,8 @@ BuildTask::BuildTask(Unit builder, UnitType building, Priority priority)
   _position = Broodwar->getBuildLocation(building, TilePosition(_builder->getPosition()), 15);
   _progress = Progress::WAITING;
   _priority = priority;
+  _startTime = 0;
+  _workerManager = workerManager;
 }
 
 void BuildTask::StartBuidling()
@@ -29,12 +34,13 @@ void BuildTask::StartBuidling()
   if ((Broodwar->getLastError() == Errors::Insufficient_Minerals) ||
       (Broodwar->getLastError() == Errors::Insufficient_Gas))
   {
-    SendBuilder();
     return;
   }
   _hasStarted = true;
   _progress = Progress::BUILDING;
   _startTime = Broodwar->getFrameCount();
+  _workerManager->AddWorker(_builder);
+
 }
 
 void BuildTask::SendBuilder()

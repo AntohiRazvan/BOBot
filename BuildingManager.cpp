@@ -4,17 +4,15 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-BuildingManager::BuildingManager()
+BuildingManager::BuildingManager(WorkerManager *wm)
 {
-  
+  _workerManager = wm;
 }
 
 void BuildingManager::AddBuildRequest(UnitType building, Priority priority)
 {
-  Unit builder = Broodwar->getClosestUnit(Position(Broodwar->self()->getStartLocation()),
-                                    (GetType == building.whatBuilds().first) &&
-                                    (IsIdle || IsGatheringMinerals) && IsOwned);
-  BuildTask *buildTask = new BuildTask(builder, building, priority);
+  Unit builder = _workerManager->GetWorker();
+  BuildTask *buildTask = new BuildTask(builder, building, _workerManager, priority);
   _buildQueue.push(buildTask);
 }
 
@@ -29,11 +27,11 @@ void BuildingManager::Update()
 void BuildingManager::SupplyCheck()
 {
   if ((Broodwar->self()->supplyTotal() < MAX_SUPPLY) &&
-      ((Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed()) < minSupplyLeft) &&
-      (!pylonInQueue))
+      ((Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed()) < _minSupplyLeft) &&
+      (!_pylonInQueue))
   {
     AddBuildRequest(UnitTypes::Protoss_Pylon, Priority::HIGH);
-    pylonInQueue = true;
+    _pylonInQueue = true;
   }
 }
 
@@ -43,9 +41,10 @@ void BuildingManager::SendBuilders()
   {
     int currentMinerals = Broodwar->self()->minerals();
     int currentGas = Broodwar->self()->gas();
-  
+    
     BuildTask* bt = _buildQueue.top();
-    if ((bt->GetMineralPrice() <= currentMinerals) && (bt->GetGasPrice() <= currentGas))
+    if ((bt->GetMineralPrice() <= currentMinerals) && 
+          (bt->GetGasPrice() <= currentGas))
     {
       bt->SendBuilder();
       _buildQueue.pop();
@@ -57,7 +56,7 @@ void BuildingManager::SendBuilders()
 void BuildingManager::StartBuildingCheck()
 {
   for (vector<BuildTask*>::iterator it = _buildingsInProgress.begin();
-       it != _buildingsInProgress.end(); it++)
+      it != _buildingsInProgress.end(); it++)
   {
     if ((*it)->WorkerArrived() && !(*it)->HasStarted())
     {
@@ -71,15 +70,16 @@ void BuildingManager::FinishBuildingsCheck()
   for (vector<BuildTask*>::iterator buildTask = _buildingsInProgress.begin();
     buildTask != _buildingsInProgress.end();)
   {
-
-    int a = (*buildTask)->GetStartTime();
-    int b = (*buildTask)->GetBuildingType().buildTime();
-    int c = Broodwar->getFrameCount();
+    if ((*buildTask)->GetStartTime() == 0)
+    {
+      buildTask++;
+      continue;
+    }
     if ((*buildTask)->GetStartTime() + (*buildTask)->GetBuildingType().buildTime() < Broodwar->getFrameCount())
     {
       map<UnitType, int>::iterator it = _buildingsMade.find((*buildTask)->GetBuildingType());
 
-      if ((*buildTask)->GetBuildingType() == UnitTypes::Protoss_Pylon) pylonInQueue = false;
+      if ((*buildTask)->GetBuildingType() == UnitTypes::Protoss_Pylon) _pylonInQueue = false;
       
       if (it != _buildingsMade.end())
       {

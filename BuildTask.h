@@ -1,6 +1,6 @@
 #pragma once
 #include <BWAPI.h>
-
+#include "WorkerManager.h"
 enum Progress 
 {
   WAITING, WORKER_UNDERWAY, BUILDING
@@ -23,10 +23,11 @@ private:
   bool _hasStarted = false;
   Priority _priority;
   Progress _progress;
+  WorkerManager *_workerManager;
 
 public:
-  BuildTask(BWAPI::Unit builder, BWAPI::UnitType building);
-  BuildTask(BWAPI::Unit builder, BWAPI::UnitType building, Priority priority);
+  BuildTask(BWAPI::Unit builder, BWAPI::UnitType building, WorkerManager *workerManager);
+  BuildTask(BWAPI::Unit builder, BWAPI::UnitType building, WorkerManager *workerManager, Priority priority);
   void StartBuidling();
   void SendBuilder();
   int GetMineralPrice();

@@ -3,10 +3,10 @@
 #include <vector>
 #include <iterator>
 #include <map>
+#include "WorkerManager.h"
 #include "BuildTask.h"
-#include "IManager.h"
 
-#define MAX_SUPPLY 200
+#define MAX_SUPPLY 400
 
 struct CompareBuildTaskPriority 
 {
@@ -16,15 +16,17 @@ struct CompareBuildTaskPriority
   }
 };
 
-class BuildingManager : IManager
+class BuildingManager
 {
 private:
   std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildQueue;
   std::vector<BuildTask*> _buildingsInProgress;
   std::map<BWAPI::UnitType, int> _buildingsMade;
 
-  int minSupplyLeft = 4;
-  bool pylonInQueue = false;
+  WorkerManager *_workerManager;
+
+  int _minSupplyLeft = 8;
+  bool _pylonInQueue = false;
 
   void FinishBuildingsCheck();
   void SupplyCheck();
@@ -32,7 +34,7 @@ private:
   void SendBuilders();
 
 public:
-  BuildingManager();
+  BuildingManager(WorkerManager *wm);
   void AddBuildRequest(BWAPI::UnitType building, Priority piriority = Priority::LOW);
   void Update();
 };

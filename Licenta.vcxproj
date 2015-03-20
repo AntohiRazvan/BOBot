@@ -97,14 +97,15 @@
     <ClCompile Include="BuildTask.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\Licenta.cpp" />
+    <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildingManager.h" />
     <ClInclude Include="BuildOrder.h" />
     <ClInclude Include="BuildTask.h" />
-    <ClInclude Include="IManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Licenta.h" />
+    <ClInclude Include="WorkerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Licenta.rc" />
