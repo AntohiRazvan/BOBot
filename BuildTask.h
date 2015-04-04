@@ -3,7 +3,7 @@
 #include "WorkerManager.h"
 enum Progress 
 {
-  WAITING, WORKER_UNDERWAY, BUILDING
+  WAITING, WORKER_UNDERWAY, WORKER_ARRIVED, BUILDING, DONE
 };
 
 enum Priority 
@@ -20,7 +20,6 @@ private:
   int _mineralPrice;
   int _gasPrice;
   int _startTime;
-  bool _hasStarted = false;
   Priority _priority;
   Progress _progress;
   WorkerManager *_workerManager;
@@ -37,7 +36,4 @@ public:
   Priority GetPriority() const;
   Progress GetProgress();
   void SetProgress(Progress progress);
-  bool WorkerArrived();
-  bool IsFinished();
-  bool HasStarted();
 };

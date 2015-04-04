@@ -5,6 +5,7 @@
 #include <map>
 #include "WorkerManager.h"
 #include "BuildTask.h"
+#include "Manager.h"
 
 #define MAX_SUPPLY 400
 
@@ -16,7 +17,7 @@ struct CompareBuildTaskPriority
   }
 };
 
-class BuildingManager
+class BuildingManager : Manager
 {
 private:
   std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildQueue;

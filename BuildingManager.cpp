@@ -58,7 +58,7 @@ void BuildingManager::StartBuildingCheck()
   for (vector<BuildTask*>::iterator it = _buildingsInProgress.begin();
       it != _buildingsInProgress.end(); it++)
   {
-    if ((*it)->WorkerArrived() && !(*it)->HasStarted())
+    if (((*it)->GetProgress() == WORKER_ARRIVED))
     {
       (*it)->StartBuidling();
     }

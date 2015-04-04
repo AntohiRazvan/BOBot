@@ -11,8 +11,8 @@ BuildingManager buildingManager = 0;
 
 void ExampleAIModule::onStart()
 {
- workerManager = new WorkerManager();
- buildingManager = BuildingManager(workerManager);
+  workerManager = new WorkerManager();
+  buildingManager = BuildingManager(workerManager);
   // Hello World!
   Broodwar->sendText("Hello world!");
 
@@ -235,13 +235,6 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
       Broodwar->sendText("%.2d:%.2d: %s creates a %s", minutes, seconds, unit->getPlayer()->getName().c_str(), unit->getType().c_str());
     }
   }
-  else
-  {
-	  if (unit->getType() == UnitTypes::Protoss_Zealot)
-	  	nrOfZealots++;
-    if (unit->getType() == UnitTypes::Protoss_Probe)
-      workerManager->AddWorker(unit);
-  }
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
@@ -274,4 +267,8 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
+  if (unit->getType() == UnitTypes::Protoss_Zealot)
+    nrOfZealots++;
+  if (unit->getType() == UnitTypes::Protoss_Probe)
+    workerManager->AddWorker(unit);
 }

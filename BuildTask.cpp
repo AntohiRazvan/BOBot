@@ -36,7 +36,6 @@ void BuildTask::StartBuidling()
   {
     return;
   }
-  _hasStarted = true;
   _progress = Progress::BUILDING;
   _startTime = Broodwar->getFrameCount();
   _workerManager->AddWorker(_builder);
@@ -47,13 +46,6 @@ void BuildTask::SendBuilder()
 {
   _builder->move(Position(_position));
   _progress = Progress::WORKER_UNDERWAY;
-}
-
-bool BuildTask::WorkerArrived()
-{
-  if (_builder->getTilePosition().getDistance(_position) < 10)
-    return true;
-  return false;
 }
 
 int BuildTask::GetMineralPrice()
@@ -73,6 +65,12 @@ Priority BuildTask::GetPriority() const
  
 Progress BuildTask::GetProgress()
 {
+  if ((_builder->getTilePosition().getDistance(_position) < 10) &&
+      (_progress == WORKER_UNDERWAY))
+  {
+    _progress = WORKER_ARRIVED;
+  }
+
   return _progress;
 }
 
@@ -89,9 +87,4 @@ void BuildTask::SetProgress(Progress progress)
 int BuildTask::GetStartTime()
 {
   return _startTime;
-}
-
-bool BuildTask::HasStarted()
-{
-  return _hasStarted;
 }

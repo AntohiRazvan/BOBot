@@ -19,6 +19,9 @@
     <ClCompile Include="WorkerManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Manager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -46,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="WorkerManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
