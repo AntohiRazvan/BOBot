@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include <iterator>
+#include <list>
 #include <map>
 #include "WorkerManager.h"
 #include "BuildTask.h"
@@ -17,11 +18,11 @@ struct CompareBuildTaskPriority
   }
 };
 
-class BuildingManager : Manager
+class BuildingManager : public Manager
 {
 private:
-  std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildQueue;
-  std::vector<BuildTask*> _buildingsInProgress;
+  std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildingsInQueue;
+  std::list<BuildTask*> _buildingsInProgress;
   std::map<BWAPI::UnitType, int> _buildingsMade;
 
   WorkerManager *_workerManager;
@@ -29,13 +30,14 @@ private:
   int _minSupplyLeft = 8;
   bool _pylonInQueue = false;
 
-  void FinishBuildingsCheck();
   void SupplyCheck();
-  void StartBuildingCheck();
   void SendBuilders();
+  void StartBuilding();
 
 public:
   BuildingManager(WorkerManager *wm);
   void AddBuildRequest(BWAPI::UnitType building, Priority piriority = Priority::LOW);
   void Update();
+  void onUnitComplete(BWAPI::Unit unit);
+  void onUnitCreate(BWAPI::Unit unit);
 };

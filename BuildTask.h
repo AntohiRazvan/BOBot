@@ -3,7 +3,7 @@
 #include "WorkerManager.h"
 enum Progress 
 {
-  WAITING, WORKER_UNDERWAY, WORKER_ARRIVED, BUILDING, DONE
+  WAITING, WORKER_UNDERWAY, WORKER_ARRIVED, BUILDING
 };
 
 enum Priority 
@@ -36,4 +36,5 @@ public:
   Priority GetPriority() const;
   Progress GetProgress();
   void SetProgress(Progress progress);
+  void FreeWorker();
 };

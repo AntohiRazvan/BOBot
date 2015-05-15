@@ -5,7 +5,7 @@ Manager::Manager()
 {
 }
 
-void Update()
+void Manager::Update()
 {
   return;
 }

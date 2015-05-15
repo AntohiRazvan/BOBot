@@ -8,7 +8,7 @@ BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManag
   _building = building;
   _mineralPrice = building.mineralPrice();
   _gasPrice = building.gasPrice();
-  _position = Broodwar->getBuildLocation(building, TilePosition(_builder->getPosition()), 15);
+  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition());
   _progress = Progress::WAITING;
   _priority = Priority::LOW;
   _startTime = 0;
@@ -21,7 +21,7 @@ BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManag
   _building = building;
   _mineralPrice = building.mineralPrice();
   _gasPrice = building.gasPrice();
-  _position = Broodwar->getBuildLocation(building, TilePosition(_builder->getPosition()), 15);
+  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition());
   _progress = Progress::WAITING;
   _priority = priority;
   _startTime = 0;
@@ -30,22 +30,21 @@ BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManag
 
 void BuildTask::StartBuidling()
 {
-  _builder->build(_building, _position);
-  if ((Broodwar->getLastError() == Errors::Insufficient_Minerals) ||
-      (Broodwar->getLastError() == Errors::Insufficient_Gas))
+  if (!_builder)
   {
-    return;
+    _builder = _workerManager->GetWorker();
   }
-  _progress = Progress::BUILDING;
+  _builder->build(_building, _position);
   _startTime = Broodwar->getFrameCount();
-  _workerManager->AddWorker(_builder);
-
 }
 
 void BuildTask::SendBuilder()
 {
-  _builder->move(Position(_position));
-  _progress = Progress::WORKER_UNDERWAY;
+  if (_progress == Progress::WAITING)
+  {
+    _builder->move(Position(_position));
+    _progress = Progress::WORKER_UNDERWAY;
+  }
 }
 
 int BuildTask::GetMineralPrice()
@@ -66,9 +65,9 @@ Priority BuildTask::GetPriority() const
 Progress BuildTask::GetProgress()
 {
   if ((_builder->getTilePosition().getDistance(_position) < 10) &&
-      (_progress == WORKER_UNDERWAY))
+      (_progress == Progress::WORKER_UNDERWAY))
   {
-    _progress = WORKER_ARRIVED;
+    _progress = Progress::WORKER_ARRIVED;
   }
 
   return _progress;
@@ -88,3 +87,10 @@ int BuildTask::GetStartTime()
 {
   return _startTime;
 }
+
+void BuildTask::FreeWorker()
+{
+  _workerManager->AddWorker(_builder);
+}
+
+

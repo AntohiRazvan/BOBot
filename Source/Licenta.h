@@ -1,10 +1,19 @@
 #pragma once
+#include <list>
 #include <BWAPI.h>
+#include "..\Manager.h"
+#include "..\BuildingManager.h"
+#include "..\WorkerManager.h"
 
 // Remember not to use "Broodwar" in any global class constructor!
 
 class ExampleAIModule : public BWAPI::AIModule
 {
+  WorkerManager *_workerManager;
+  BuildingManager *_buildingManager;
+  std::list<Manager*> _managers;
+
+
 public:
   // Virtual functions for callbacks, leave these as they are.
   virtual void onStart();

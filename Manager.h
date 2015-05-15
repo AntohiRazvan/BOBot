@@ -5,8 +5,8 @@ class Manager
 {
 public:
   Manager();
-  void Update();
-  void onUnitComplete(BWAPI::Unit unit);
-  void onUnitCreate(BWAPI::Unit unit);
+  virtual void Update();
+  virtual void onUnitComplete(BWAPI::Unit unit);
+  virtual void onUnitCreate(BWAPI::Unit unit);
 };
 
