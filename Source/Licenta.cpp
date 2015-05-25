@@ -1,6 +1,6 @@
 #include "Licenta.h"
 #include <iostream>
-
+#include <boost/log/trivial.hpp>
 
 using namespace BWAPI;
 using namespace Filter;

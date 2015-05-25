@@ -21,3 +21,8 @@ void Manager::onUnitCreate(BWAPI::Unit unit)
   return;
 }
 
+
+void Manager::onUnitDestroy(BWAPI::Unit unit)
+{
+  return;
+}
