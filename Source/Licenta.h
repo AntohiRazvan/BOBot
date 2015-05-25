@@ -34,8 +34,4 @@ public:
   virtual void onSaveGame(std::string gameName);
   virtual void onUnitComplete(BWAPI::Unit unit);
   // Everything below this line is safe to modify.
-
-  void BuildBarracks(BWAPI::Unit u);
-
-  int nrOfZealots = 0;
 };

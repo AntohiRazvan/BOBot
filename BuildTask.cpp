@@ -8,7 +8,7 @@ BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManag
   _building = building;
   _mineralPrice = building.mineralPrice();
   _gasPrice = building.gasPrice();
-  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition());
+  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition(), 10);
   _progress = Progress::WAITING;
   _priority = Priority::LOW;
   _startTime = 0;
@@ -21,7 +21,7 @@ BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManag
   _building = building;
   _mineralPrice = building.mineralPrice();
   _gasPrice = building.gasPrice();
-  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition());
+  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition(), 10);
   _progress = Progress::WAITING;
   _priority = priority;
   _startTime = 0;
@@ -40,6 +40,10 @@ void BuildTask::StartBuidling()
 
 void BuildTask::SendBuilder()
 {
+  if (_position == INVALID_POSITION)
+  {
+    _position = Broodwar->getBuildLocation(_building, (TilePosition)_builder->getPosition(), 10);
+  }
   if (_progress == Progress::WAITING)
   {
     _builder->move(Position(_position));
@@ -92,5 +96,4 @@ void BuildTask::FreeWorker()
 {
   _workerManager->AddWorker(_builder);
 }
-
 

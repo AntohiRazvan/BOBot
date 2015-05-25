@@ -14,7 +14,7 @@ struct CompareBuildTaskPriority
 {
   bool operator()(const BuildTask* BuildTask1, const BuildTask* BuildTask2)
   {
-    return BuildTask1->GetPriority() > BuildTask2->GetPriority();
+    return BuildTask1->GetPriority() < BuildTask2->GetPriority();
   }
 };
 

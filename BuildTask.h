@@ -1,6 +1,9 @@
 #pragma once
 #include <BWAPI.h>
 #include "WorkerManager.h"
+
+#define INVALID_POSITION TilePosition(1000, 1001)
+
 enum Progress 
 {
   WAITING, WORKER_UNDERWAY, WORKER_ARRIVED, BUILDING

@@ -66,12 +66,11 @@ void ExampleAIModule::onEnd(bool isWinner)
 
 void ExampleAIModule::onFrame()
 {
-
   static bool a = true;
   if (a)
   {
- //   _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
-  //  _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
+    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
+    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
     a = false;
   }
 
@@ -139,25 +138,8 @@ void ExampleAIModule::onFrame()
         u->train(BWAPI::UnitTypes::Protoss_Zealot);
       }
     }
-
-      if (u->getType() == UnitTypes::Protoss_Zealot)
-        if(u->isIdle() && nrOfZealots > 5){
-        u->attack(Position(Broodwar->enemy()->getStartLocation()));
-     }
-   } // closure: unit iterator
+   } 
  }
-
-
-void ExampleAIModule::BuildBarracks(Unit u){
-  /*
-	static int lastChecked = 0;
-	if (lastChecked + 400 < Broodwar->getFrameCount()){
-		if (Broodwar->canMake(BWAPI::UnitTypes::Protoss_Gateway, u)){
-			lastChecked = Broodwar->getFrameCount();
-      buildingManager.AddBuildRequest(UnitTypes::Protoss_Gateway);
-    }
-	}*/
-}
 
 void ExampleAIModule::onSendText(std::string text)
 {

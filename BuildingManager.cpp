@@ -72,28 +72,6 @@ void BuildingManager::StartBuilding()
   }
 }
 
-void BuildingManager::onUnitComplete(BWAPI::Unit unit)
-{
-  for (auto bt : _buildingsInProgress)
-  {
-    if (bt->GetBuildingType() == unit->getType())
-    {
-      _buildingsInProgress.remove(bt);
-      map<BWAPI::UnitType, int>::iterator it = _buildingsMade.find(bt->GetBuildingType());
-      if (it != _buildingsMade.end())
-      {
-        it->second++;
-      }
-      else
-      {
-        _buildingsMade.insert(pair<BWAPI::UnitType, int>(bt->GetBuildingType(), 1));
-      }
-      delete(bt);
-    }
-  }
-
-}
-
 void BuildingManager::onUnitCreate(BWAPI::Unit unit)
 {
   if (!_buildingsInQueue.empty())
@@ -105,6 +83,34 @@ void BuildingManager::onUnitCreate(BWAPI::Unit unit)
       bt->FreeWorker();
       _buildingsInQueue.pop();
       _buildingsInProgress.push_back(bt);
+    }
+  }
+}
+
+void BuildingManager::onUnitComplete(BWAPI::Unit unit)
+{
+  for (auto bt : _buildingsInProgress)
+  {
+    if (bt->GetBuildingType() == unit->getType())
+    {
+      _buildingsInProgress.remove(bt);
+      map<BWAPI::UnitType, int>::iterator it = _buildingsMade.find(bt->GetBuildingType());
+      if (it != _buildingsMade.end())
+      {
+        it->second += 1;
+      }
+      else
+      {
+        _buildingsMade.insert(pair<BWAPI::UnitType, int>(bt->GetBuildingType(), 1));
+      }
+
+      if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
+      {
+        _pylonInQueue = false;
+      }
+
+      delete(bt);
+      break;
     }
   }
 }
