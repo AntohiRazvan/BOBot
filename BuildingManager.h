@@ -4,10 +4,10 @@
 #include <iterator>
 #include <list>
 #include <map>
+#include "ResourceManager.h"
 #include "WorkerManager.h"
 #include "BuildTask.h"
 #include "Manager.h"
-
 #define MAX_SUPPLY 400
 
 struct CompareBuildTaskPriority 
@@ -26,8 +26,9 @@ private:
   std::map<BWAPI::UnitType, int> _buildingsMade;
 
   WorkerManager *_workerManager;
+  ResourceManager *_resourceManager;
 
-  int _minSupplyLeft = 8;
+  int _minSupplyLeft = 10;
   bool _pylonInQueue = false;
 
   void SupplyCheck();
@@ -35,7 +36,7 @@ private:
   void StartBuilding();
 
 public:
-  BuildingManager(WorkerManager *wm);
+  BuildingManager(WorkerManager *wm, ResourceManager *rm);
   void AddBuildRequest(BWAPI::UnitType building, Priority piriority = Priority::LOW);
   void Update();
   void onUnitComplete(BWAPI::Unit unit);

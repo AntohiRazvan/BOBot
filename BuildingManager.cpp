@@ -4,9 +4,10 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-BuildingManager::BuildingManager(WorkerManager *wm)
+BuildingManager::BuildingManager(WorkerManager *wm, ResourceManager *rm)
 {
   _workerManager = wm;
+  _resourceManager = rm;
 }
 
 void BuildingManager::AddBuildRequest(UnitType building, Priority priority)
@@ -42,9 +43,11 @@ void BuildingManager::SendBuilders()
     int currentGas = Broodwar->self()->gas();
     
     BuildTask* bt = _buildingsInQueue.top();
-    if ((bt->GetMineralPrice() <= currentMinerals) && 
-        (bt->GetGasPrice() <= currentGas))
+    if ((bt->GetMineralPrice() <= (currentMinerals - _resourceManager->GetReservedMinerals())) && 
+      (bt->GetGasPrice() <= (currentGas - _resourceManager->GetReservedGas())))
     {
+      _resourceManager->ReserveMinerals(bt->GetMineralPrice());
+      _resourceManager->ReserveGas(bt->GetGasPrice());
       bt->SendBuilder();
     }
   }

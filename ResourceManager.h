@@ -16,4 +16,5 @@ public:
   int GetReservedGas();
   void FreeMinerals(int mineralsToFree);
   void FreeGas(int gasToFree);
+  void onUnitCreate(BWAPI::Unit unit);
 };

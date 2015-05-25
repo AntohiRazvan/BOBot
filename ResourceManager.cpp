@@ -37,3 +37,12 @@ void ResourceManager::FreeGas(int gasToFree)
 {
   _reservedMinerals -= gasToFree;
 }
+
+void ResourceManager::onUnitCreate(Unit unit)
+{
+  if (Filter::IsBuilding(unit))
+  {
+    _reservedMinerals -= unit->getType().mineralPrice();
+    _reservedGas -= unit->getType().gasPrice();
+  }
+}

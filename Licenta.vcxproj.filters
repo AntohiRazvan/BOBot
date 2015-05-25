@@ -22,8 +22,12 @@
     <ClCompile Include="Manager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="ArmyManager.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ArmyManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -56,8 +60,12 @@
     <ClInclude Include="Manager.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ArmyManager.h" />
-    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ArmyManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Licenta.rc" />

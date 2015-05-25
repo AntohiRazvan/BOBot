@@ -7,8 +7,9 @@ using namespace Filter;
 
 void ExampleAIModule::onStart()
 {
+  _resourceManager = new ResourceManager();
   _workerManager = new WorkerManager();
-  _buildingManager = new BuildingManager(_workerManager);
+  _buildingManager = new BuildingManager(_workerManager, _resourceManager);
 
   _managers.push_back(_workerManager);
   _managers.push_back(_buildingManager);
