@@ -28,7 +28,7 @@ private:
   WorkerManager *_workerManager;
   ResourceManager *_resourceManager;
 
-  int _minSupplyLeft = 10;
+  int _minSupplyLeft = 16;
   bool _pylonInQueue = false;
 
   void SupplyCheck();
@@ -38,7 +38,7 @@ private:
 public:
   BuildingManager(WorkerManager *wm, ResourceManager *rm);
   void AddBuildRequest(BWAPI::UnitType building, Priority piriority = Priority::LOW);
-  void Update();
+  void update();
   void onUnitComplete(BWAPI::Unit unit);
   void onUnitCreate(BWAPI::Unit unit);
 };

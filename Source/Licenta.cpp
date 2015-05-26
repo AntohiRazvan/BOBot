@@ -5,14 +5,18 @@
 using namespace BWAPI;
 using namespace Filter;
 
+
 void ExampleAIModule::onStart()
 {
+  TerrainAnalyzer::Instance();
   _resourceManager = new ResourceManager();
   _workerManager = new WorkerManager();
   _buildingManager = new BuildingManager(_workerManager, _resourceManager);
 
   _managers.push_back(_workerManager);
   _managers.push_back(_buildingManager);
+  _managers.push_back(_resourceManager);
+
 
   // Hello World!
   Broodwar->sendText("Hello world!");
@@ -67,6 +71,7 @@ void ExampleAIModule::onEnd(bool isWinner)
 
 void ExampleAIModule::onFrame()
 {
+  TerrainAnalyzer::Instance()->DrawTerrainDataWhenAble();
   static bool a = true;
   if (a)
   {
@@ -92,7 +97,7 @@ void ExampleAIModule::onFrame()
 
   for (auto manager : _managers)
   {
-    manager->Update();
+    manager->update();
   }
 
   // Iterate through all the units that we own
@@ -120,7 +125,7 @@ void ExampleAIModule::onFrame()
     {
 
       // Order the depot to construct more workers! But only when it is idle.
-      if (u->isIdle() && !u->train(u->getType().getRace().getWorker()))
+     /* if (u->isIdle() && !u->train(u->getType().getRace().getWorker()))
       {
         // If that fails, draw the error at the location so that you can visibly see what went wrong!
         // However, drawing the error once will only appear for a single frame
@@ -132,7 +137,7 @@ void ExampleAIModule::onFrame()
           Broodwar->getLatencyFrames());  // frames to run
 
       } // closure: failed to train idle unit
-
+      */
     }
     if (u->getType() == BWAPI::UnitTypes::Protoss_Gateway){
       if (u->isIdle() && Broodwar->canMake(BWAPI::UnitTypes::Protoss_Zealot, u)){
@@ -173,13 +178,37 @@ void ExampleAIModule::onUnitShow(BWAPI::Unit unit)
 void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
 {
 }
-
+#include <vector>
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
-    for (auto manager : _managers)
+  static TilePosition pos;
+  if (pos)
+  {
+    for (auto p : Broodwar->getStartLocations())
     {
-      manager->onUnitCreate(unit);
+      if (p != Broodwar->self()->getStartLocation())
+      {
+        pos = TilePosition(p);
+      }
     }
+  }
+
+  static std::vector<BWAPI::Unit> units;
+  if (unit->getType() == UnitTypes::Protoss_Zealot)
+  {
+    units.push_back(unit);
+  }
+  if (units.size() > 4)
+  {
+    for (auto u : units)
+    {
+      u->attack(Position(pos));
+    }
+  }
+  for (auto manager : _managers)
+  {
+    manager->onUnitCreate(unit);
+  }
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)

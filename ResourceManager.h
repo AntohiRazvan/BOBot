@@ -2,9 +2,8 @@
 #include <BWAPI.h>
 #include "Manager.h"
 
-class ResourceManager : Manager
+class ResourceManager : public Manager
 {
-  ResourceManager *_instance;
   int _reservedMinerals;
   int _reservedGas;
 

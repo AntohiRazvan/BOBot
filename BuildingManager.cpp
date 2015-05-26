@@ -17,7 +17,7 @@ void BuildingManager::AddBuildRequest(UnitType building, Priority priority)
   _buildingsInQueue.push(buildTask);
 }
 
-void BuildingManager::Update()
+void BuildingManager::update()
 {
   SupplyCheck();
   SendBuilders();

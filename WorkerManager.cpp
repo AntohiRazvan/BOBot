@@ -35,7 +35,7 @@ Unit WorkerManager::GetWorker()
   return nullptr;
 }
 
-void WorkerManager::Update()
+void WorkerManager::update()
 {
   for (auto u : _gatheringWorkerList)
   {

@@ -40,9 +40,12 @@ void BuildTask::StartBuidling()
 
 void BuildTask::SendBuilder()
 {
-  if (_position == INVALID_POSITION)
+  /*if (_position.x >= Broodwar->mapWidth() ||
+      _position.y >= Broodwar->mapHeight())
+      */
+  if (!Broodwar->canBuildHere(_position, _building))
   {
-    _position = Broodwar->getBuildLocation(_building, (TilePosition)_builder->getPosition(), 10);
+    _position = Broodwar->getBuildLocation(_building, (TilePosition)_builder->getPosition(), 20);
   }
   if (_progress == Progress::WAITING)
   {

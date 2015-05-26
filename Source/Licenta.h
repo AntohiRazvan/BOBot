@@ -5,6 +5,7 @@
 #include "..\BuildingManager.h"
 #include "..\WorkerManager.h"
 #include "..\ResourceManager.h"
+#include "..\TerrainAnalyzer.h"
 
 // Remember not to use "Broodwar" in any global class constructor!
 

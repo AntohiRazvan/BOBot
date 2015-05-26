@@ -9,7 +9,7 @@ class WorkerManager : public Manager
   std::list<BWAPI::Unit> _buildingWorkerList;
 public:
   WorkerManager();
-  void Update();
+  void update();
   void onUnitComplete(BWAPI::Unit unit);
   void onUnitCreate(BWAPI::Unit unit);
   void AddWorker(BWAPI::Unit u);
