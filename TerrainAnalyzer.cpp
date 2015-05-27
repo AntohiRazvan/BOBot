@@ -45,6 +45,15 @@ Chokepoint* TerrainAnalyzer::GetNearestChokepoint(Position position)
   return nullptr;
 }
 
+Chokepoint* TerrainAnalyzer::GetNearestChokepoint(TilePosition tilePosition)
+{
+  if (_analyzed)
+  {
+    return getNearestChokepoint(tilePosition);
+  }
+  return nullptr;
+}
+
 set<Chokepoint*> TerrainAnalyzer::GetChokepoints()
 {
   if (_analyzed)
@@ -88,6 +97,14 @@ set<BaseLocation*> TerrainAnalyzer::GetBaseLocations()
     return getBaseLocations();
   }
   return set<BaseLocation*>();
+}
+
+TilePosition TerrainAnalyzer::GetMyBaseLocation()
+{
+  if (_analyzed)
+  {
+    return Broodwar->self()->getStartLocation();
+  }
 }
 
 double TerrainAnalyzer::GetGroundDistance(TilePosition start, TilePosition end)

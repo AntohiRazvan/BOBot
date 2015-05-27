@@ -28,8 +28,12 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="ProductionManager.cpp" />
-    <ClCompile Include="TerrainAnalyzer.cpp" />
+    <ClCompile Include="ProductionManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainAnalyzer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -68,8 +72,12 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ProductionManager.h" />
-    <ClInclude Include="TerrainAnalyzer.h" />
+    <ClInclude Include="ProductionManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainAnalyzer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Licenta.rc" />
