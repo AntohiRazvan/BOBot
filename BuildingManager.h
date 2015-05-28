@@ -42,5 +42,5 @@ public:
   void update();
   void onUnitComplete(BWAPI::Unit unit);
   void onUnitCreate(BWAPI::Unit unit);
-  void onUnitDestroy();
+  void onUnitDestroy(BWAPI::Unit unit);
 };
