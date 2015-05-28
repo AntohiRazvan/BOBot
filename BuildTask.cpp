@@ -71,7 +71,7 @@ Priority BuildTask::GetPriority() const
  
 Progress BuildTask::GetProgress()
 {
-  if ((_builder->getTilePosition().getDistance(_position) < 5) &&
+  if ((_builder->getTilePosition().getDistance(_position) < 10) &&
       (_progress == Progress::WORKER_UNDERWAY))
   {
     _progress = Progress::WORKER_ARRIVED;

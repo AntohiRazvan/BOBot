@@ -26,6 +26,9 @@ void BuildingManager::update()
 
 void BuildingManager::SupplyCheck()
 {
+  int curMaxSupply = Broodwar->self()->supplyTotal();
+  int curSupply = Broodwar->self()->supplyUsed();
+
   if ((Broodwar->self()->supplyTotal() < MAX_SUPPLY) &&
       ((Broodwar->self()->supplyTotal() - Broodwar->self()->supplyUsed()) < _minSupplyLeft) &&
       (!_pylonInQueue))
@@ -40,6 +43,10 @@ void BuildingManager::SendBuilders()
   if (!_buildingsInQueue.empty())
   { 
     BuildTask* bt = _buildingsInQueue.top();
+
+    if ((!_firstPylonBuilt) && (bt->GetBuildingType() != UnitTypes::Protoss_Pylon))
+      return;
+
     if (_resourceManager->CanAfford(bt->GetBuildingType()))
     {
       _resourceManager->ReserveMinerals(bt->GetMineralPrice());
@@ -56,12 +63,9 @@ void BuildingManager::StartBuilding()
     BuildTask* bt = _buildingsInQueue.top();
     if (bt->GetProgress() == Progress::WORKER_ARRIVED)
     {
-      if (_resourceManager->CanAfford(bt->GetBuildingType()))
+      if (bt->GetStartTime() + 15 < Broodwar->getFrameCount())
       {
-        if (bt->GetStartTime() + 5 < Broodwar->getFrameCount())
-        {
-          bt->StartBuidling();
-        }
+        bt->StartBuidling();
       }
     }
   }
@@ -101,11 +105,27 @@ void BuildingManager::onUnitComplete(BWAPI::Unit unit)
 
       if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
       {
+        if (!_firstPylonBuilt)
+        {
+          _firstPylonBuilt = true;
+        }
         _pylonInQueue = false;
       }
 
       delete(bt);
       break;
+    }
+  }
+}
+
+
+void BuildingManager::onUnitDestroy(Unit unit)
+{
+  if (unit->getType() == UnitTypes::Protoss_Pylon)
+  {
+    if (_pylonInQueue)
+    {
+      _pylonInQueue = false;
     }
   }
 }

@@ -30,6 +30,7 @@ private:
 
   int _minSupplyLeft = 16;
   bool _pylonInQueue = false;
+  bool _firstPylonBuilt = false;
 
   void SupplyCheck();
   void SendBuilders();
@@ -41,4 +42,5 @@ public:
   void update();
   void onUnitComplete(BWAPI::Unit unit);
   void onUnitCreate(BWAPI::Unit unit);
+  void onUnitDestroy();
 };
