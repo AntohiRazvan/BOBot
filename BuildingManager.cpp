@@ -38,13 +38,9 @@ void BuildingManager::SupplyCheck()
 void BuildingManager::SendBuilders()
 {
   if (!_buildingsInQueue.empty())
-  {
-    int currentMinerals = Broodwar->self()->minerals();
-    int currentGas = Broodwar->self()->gas();
-    
+  { 
     BuildTask* bt = _buildingsInQueue.top();
-    if ((bt->GetMineralPrice() <= (currentMinerals - _resourceManager->GetReservedMinerals())) && 
-      (bt->GetGasPrice() <= (currentGas - _resourceManager->GetReservedGas())))
+    if (_resourceManager->CanAfford(bt->GetBuildingType()))
     {
       _resourceManager->ReserveMinerals(bt->GetMineralPrice());
       _resourceManager->ReserveGas(bt->GetGasPrice());
@@ -60,11 +56,7 @@ void BuildingManager::StartBuilding()
     BuildTask* bt = _buildingsInQueue.top();
     if (bt->GetProgress() == Progress::WORKER_ARRIVED)
     {
-      int currentMinerals = Broodwar->self()->minerals();
-      int currentGas = Broodwar->self()->gas();
-
-      if ((bt->GetMineralPrice() <= currentMinerals) &&
-        (bt->GetGasPrice() <= currentGas))
+      if (_resourceManager->CanAfford(bt->GetBuildingType()))
       {
         if (bt->GetStartTime() + 5 < Broodwar->getFrameCount())
         {
