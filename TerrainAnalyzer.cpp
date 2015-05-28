@@ -101,10 +101,7 @@ set<BaseLocation*> TerrainAnalyzer::GetBaseLocations()
 
 TilePosition TerrainAnalyzer::GetMyBaseLocation()
 {
-  if (_analyzed)
-  {
-    return Broodwar->self()->getStartLocation();
-  }
+  return Broodwar->self()->getStartLocation();
 }
 
 double TerrainAnalyzer::GetGroundDistance(TilePosition start, TilePosition end)

@@ -28,6 +28,16 @@ int ResourceManager::GetReservedGas()
   return _reservedGas;
 }
 
+int ResourceManager::GetMinerals()
+{
+  return Broodwar->self()->minerals() - _reservedMinerals;
+}
+
+int ResourceManager::GetGas()
+{
+  return Broodwar->self()->gas() - _reservedGas;
+}
+
 void ResourceManager::FreeMinerals(int mineralsToFree)
 {
   _reservedMinerals -= mineralsToFree;
@@ -42,10 +52,19 @@ void ResourceManager::onUnitCreate(Unit unit)
 {
   if (Broodwar->getFrameCount() > 1)
   {
-    if (Filter::IsBuilding(unit))
-    {
-      _reservedMinerals -= unit->getType().mineralPrice();
-      _reservedGas -= unit->getType().gasPrice();
-    }
+    _reservedMinerals -= unit->getType().mineralPrice();
+    _reservedGas -= unit->getType().gasPrice();
   }
+}
+
+bool ResourceManager::CanAfford(UnitType unitType)
+{
+  bool canAfford = true;
+  int mineralPrice = unitType.mineralPrice();
+  int gasPrice = unitType.gasPrice();
+  if ((mineralPrice != 0) && (Broodwar->self()->minerals() - mineralPrice - _reservedMinerals < 0))
+    canAfford = false;
+  if ((gasPrice != 0) && (Broodwar->self()->gas() - gasPrice - _reservedGas < 0))
+    canAfford = false;
+  return canAfford;
 }

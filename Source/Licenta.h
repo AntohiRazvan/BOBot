@@ -6,6 +6,7 @@
 #include "..\WorkerManager.h"
 #include "..\ResourceManager.h"
 #include "..\TerrainAnalyzer.h"
+#include "..\ProductionManager.h"
 
 // Remember not to use "Broodwar" in any global class constructor!
 
@@ -14,6 +15,7 @@ class ExampleAIModule : public BWAPI::AIModule
   WorkerManager *_workerManager;
   BuildingManager *_buildingManager;
   ResourceManager *_resourceManager;
+  ProductionManager *_productionManager;
   std::list<Manager*> _managers;
 
 

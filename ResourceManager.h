@@ -13,7 +13,10 @@ public:
   void ReserveGas(int gasToReserve);
   int GetReservedMinerals();
   int GetReservedGas();
+  int GetMinerals();
+  int GetGas();
   void FreeMinerals(int mineralsToFree);
   void FreeGas(int gasToFree);
+  bool CanAfford(BWAPI::UnitType unitType);
   void onUnitCreate(BWAPI::Unit unit);
 };

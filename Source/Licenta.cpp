@@ -12,11 +12,12 @@ void ExampleAIModule::onStart()
   _resourceManager = new ResourceManager();
   _workerManager = new WorkerManager();
   _buildingManager = new BuildingManager(_workerManager, _resourceManager);
+  _productionManager = new ProductionManager(_resourceManager, _buildingManager);
 
-  _managers.push_back(_workerManager);
-  _managers.push_back(_buildingManager);
   _managers.push_back(_resourceManager);
-
+  _managers.push_back(_productionManager);
+  _managers.push_back(_buildingManager);
+  _managers.push_back(_workerManager);
 
   // Hello World!
   Broodwar->sendText("Hello world!");
@@ -98,53 +99,7 @@ void ExampleAIModule::onFrame()
   for (auto manager : _managers)
   {
     manager->update();
-  }
-
-  // Iterate through all the units that we own
-  for (auto &u : Broodwar->self()->getUnits())
-  {
-    // Ignore the unit if it no longer exists
-    // Make sure to include this block when handling any Unit pointer!
-    if (!u->exists())
-      continue;
-
-    // Ignore the unit if it has one of the following status ailments
-    if (u->isLockedDown() || u->isMaelstrommed() || u->isStasised())
-      continue;
-
-    // Ignore the unit if it is in one of the following states
-    if (u->isLoaded() || !u->isPowered() || u->isStuck())
-      continue;
-
-    // Ignore the unit if it is incomplete or busy constructing
-    if (!u->isCompleted() || u->isConstructing())
-      continue;
-
-
-    else if (u->getType().isResourceDepot()) // A resource depot is a Command Center, Nexus, or Hatchery
-    {
-
-      // Order the depot to construct more workers! But only when it is idle.
-     /* if (u->isIdle() && !u->train(u->getType().getRace().getWorker()))
-      {
-        // If that fails, draw the error at the location so that you can visibly see what went wrong!
-        // However, drawing the error once will only appear for a single frame
-        // so create an event that keeps it on the screen for some frames
-        Position pos = u->getPosition();
-        Error lastErr = Broodwar->getLastError();
-        Broodwar->registerEvent([pos, lastErr](Game*){ Broodwar->drawTextMap(pos, "%c%s", Text::White, lastErr.c_str()); },   // action
-          nullptr,    // condition
-          Broodwar->getLatencyFrames());  // frames to run
-
-      } // closure: failed to train idle unit
-      */
-    }
-    if (u->getType() == BWAPI::UnitTypes::Protoss_Gateway){
-      if (u->isIdle() && Broodwar->canMake(BWAPI::UnitTypes::Protoss_Zealot, u)){
-        u->train(BWAPI::UnitTypes::Protoss_Zealot);
-      }
-    }
-   } 
+  } 
  }
 
 void ExampleAIModule::onSendText(std::string text)
@@ -213,6 +168,10 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
 {
+  for (auto manager : _managers)
+  {
+    manager->onUnitDestroy(unit);
+  }
 }
 
 void ExampleAIModule::onUnitMorph(BWAPI::Unit unit)
