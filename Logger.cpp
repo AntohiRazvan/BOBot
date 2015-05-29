@@ -38,12 +38,15 @@ Logger::Logger(string filename)
 
 void Logger::Log(string action, string target)
 {
-  _action = _logger.add_attribute("Action", attrs::constant<string>(action)).first;
-  _target = _logger.add_attribute("Target", attrs::constant<string>(target)).first;
-  boost::log::attribute_set::iterator _timeStamp;
-  BOOST_LOG(_logger) << "";
-  _logger.remove_attribute(_action);
-  _logger.remove_attribute(_target);
+  if (Broodwar->getFrameCount() > 1)
+  {
+    _action = _logger.add_attribute("Action", attrs::constant<string>(action)).first;
+    _target = _logger.add_attribute("Target", attrs::constant<string>(target)).first;
+    boost::log::attribute_set::iterator _timeStamp;
+    BOOST_LOG(_logger) << "";
+    _logger.remove_attribute(_action);
+    _logger.remove_attribute(_target);
+  }
 }
 
 void Logger::onUnitCreate(Unit unit) 
