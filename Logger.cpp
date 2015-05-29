@@ -1,5 +1,4 @@
 #include "Logger.h"
-#include<functional>
 
 using namespace BWAPI;
 using namespace std;
@@ -20,10 +19,21 @@ Logger::Logger()
   logging::add_file_log
     (
     keywords::file_name = "log_%N.log",
-    keywords::format = "[%TimeStamp%]: [%Action%] [%Target%]"
+    keywords::format = "[%TimeStamp%][%Action%][%Target%]"
     );
   _timeStamp = _logger.add_attribute("TimeStamp", attrs::function<int>(&GetFrameCount)).first;
  
+}
+
+Logger::Logger(string filename)
+{
+  logging::add_file_log
+    (
+    keywords::file_name = "filename",
+    keywords::format = "[%TimeStamp%][%Action%][%Target%]"
+    );
+  _timeStamp = _logger.add_attribute("TimeStamp", attrs::function<int>(&GetFrameCount)).first;
+
 }
 
 void Logger::Log(string action, string target)
@@ -54,14 +64,25 @@ void Logger::onUnitComplete(Unit unit)
 
 void Logger::onUnitDestroy(Unit unit)
 {
-  if (unit->getPlayer() == BWAPI::Broodwar->self())
-  {
     Log("Lost", unit->getType().getName());
-  }
+}
+
+void Logger::onEnemyUnitDestroy(Unit unit)
+{
+  Log("Killed", unit->getType().getName());
+}
+
+void Logger::onEnemyUnitDiscover(Unit unit)
+{
+  Log("Discovered", unit->getType().getName());
+}
+
+void Logger::onEnd(bool isWinner)
+{
+  if (isWinner)
+    Log("I", "won");
   else
-  {
-    Log("Killed", unit->getType().getName());
-  }
+    Log("I", "lost");
 }
 
 

@@ -7,8 +7,9 @@
 #include "..\ResourceManager.h"
 #include "..\TerrainAnalyzer.h"
 #include "..\ProductionManager.h"
+#include "..\Logger.h"
 
-// Remember not to use "Broodwar" in any global class constructor!
+#define LOGGING_ENABLED
 
 class ExampleAIModule : public BWAPI::AIModule
 {
@@ -16,6 +17,7 @@ class ExampleAIModule : public BWAPI::AIModule
   BuildingManager *_buildingManager;
   ResourceManager *_resourceManager;
   ProductionManager *_productionManager;
+  Logger *_log;
   std::list<Manager*> _managers;
 
 

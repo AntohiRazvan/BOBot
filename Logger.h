@@ -22,9 +22,13 @@ class Logger : public Manager
 
 public:
   Logger();
+  Logger(std::string filename);
   void Log(std::string _event, std::string target);
   void onUnitCreate(BWAPI::Unit unit);
   void onUnitComplete(BWAPI::Unit unit);
   void onUnitDestroy(BWAPI::Unit unit);
+  void onEnemyUnitDestroy(BWAPI::Unit unit);
+  void onEnemyUnitDiscover(BWAPI::Unit unit);
+  void onEnd(bool isWinner);
 };
 

@@ -1,10 +1,7 @@
 #include "Licenta.h"
-#include <iostream>
-#include <boost/log/trivial.hpp>
 
 using namespace BWAPI;
 using namespace Filter;
-
 
 void ExampleAIModule::onStart()
 {
@@ -18,9 +15,11 @@ void ExampleAIModule::onStart()
   _managers.push_back(_productionManager);
   _managers.push_back(_buildingManager);
   _managers.push_back(_workerManager);
-
-  // Hello World!
-  Broodwar->sendText("Hello world!");
+  
+#ifdef LOGGING_ENABLED
+  _log = new Logger();
+  _managers.push_back(_log);
+#endif
 
   // Print the map name.
   // BWAPI returns std::string when retrieving a string, don't forget to add .c_str() when printing!
@@ -59,15 +58,6 @@ void ExampleAIModule::onStart()
       Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
   }
 
-}
-
-void ExampleAIModule::onEnd(bool isWinner)
-{
-  // Called when the game ends
-  if ( isWinner )
-  {
-    // Log your win here!
-  }
 }
 
 void ExampleAIModule::onFrame()
@@ -120,6 +110,13 @@ void ExampleAIModule::onNukeDetect(BWAPI::Position target)
 
 void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit)
 {
+  if (!(unit->getPlayer() == BWAPI::Broodwar->self()))
+  {
+    for (auto manager : _managers)
+    {
+      manager->onEnemyUnitDiscover(unit);
+    }
+  }
 }
 
 void ExampleAIModule::onUnitEvade(BWAPI::Unit unit)
@@ -160,17 +157,30 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
       u->attack(Position(pos));
     }
   }
-  for (auto manager : _managers)
+  if (unit->getPlayer() == BWAPI::Broodwar->self())
   {
-    manager->onUnitCreate(unit);
+    for (auto manager : _managers)
+    {
+      manager->onUnitCreate(unit);
+    }
   }
 }
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
 {
-  for (auto manager : _managers)
+  if (unit->getPlayer() == BWAPI::Broodwar->self())
   {
-    manager->onUnitDestroy(unit);
+    for (auto manager : _managers)
+    {
+      manager->onUnitDestroy(unit);
+    }
+  }
+  else
+  {
+    for (auto manager : _managers)
+    {
+      manager->onEnemyUnitDestroy(unit);
+    }
   }
 }
 
@@ -189,8 +199,19 @@ void ExampleAIModule::onSaveGame(std::string gameName)
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {
+  if (unit->getPlayer() == BWAPI::Broodwar->self())
+  {
+    for (auto manager : _managers)
+    {
+      manager->onUnitComplete(unit);
+    }
+  }
+}
+
+void ExampleAIModule::onEnd(bool isWinner)
+{
   for (auto manager : _managers)
   {
-    manager->onUnitComplete(unit);
+    manager->onEnd(isWinner);
   }
 }
