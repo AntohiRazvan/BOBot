@@ -73,6 +73,10 @@ void BuildingManager::StartBuilding()
 
 void BuildingManager::onUnitCreate(BWAPI::Unit unit)
 {
+  if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
+  {
+    _minSupplyLeft += 2;
+  }
   if (!_buildingsInQueue.empty())
   {
     BuildTask* bt = _buildingsInQueue.top();
@@ -110,6 +114,7 @@ void BuildingManager::onUnitComplete(BWAPI::Unit unit)
           _firstPylonBuilt = true;
         }
         _pylonInQueue = false;
+
       }
 
       delete(bt);
