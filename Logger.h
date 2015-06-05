@@ -2,16 +2,19 @@
 #include "Manager.h"
 #include <BWAPI.h>
 #include <string>
-#include "boost\log\core.hpp"
-#include "boost\log\trivial.hpp"
-#include "boost\log\expressions.hpp"
-#include "boost\log\sinks\text_file_backend.hpp"
-#include "boost\log\utility\setup\file.hpp"
-#include "boost\log\utility\setup\common_attributes.hpp"
-#include "boost\log\sources\record_ostream.hpp"
-#include "boost\log\sources\basic_logger.hpp"
-#include "boost\log\sources\logger.hpp"
-#include "boost\log\attributes.hpp"
+#include <functional>
+#include <iostream>
+#include <fstream>
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/basic_logger.hpp>
+#include <boost/log/sources/logger.hpp>
+#include <boost/log/attributes.hpp>
+#include <boost/algorithm/string.hpp>
 
 class Logger : public Manager
 {
@@ -19,6 +22,21 @@ class Logger : public Manager
   boost::log::attribute_set::iterator _timeStamp;
   boost::log::attribute_set::iterator _action;
   boost::log::attribute_set::iterator _target;
+  
+  int _gamesPlayed = 0;
+  int _gamesWon = 0;
+  int _gamesLost = 0;
+  float _winPercentage = 0.00f;
+  int _winsVsTerran = 0;
+  int _lossesVsTerran = 0;
+  float _terranWinPercentage = 0.00f;
+  int _winsVsProtoss = 0;
+  int _lossesVsProtoss = 0;
+  float _protossWinPercentage = 0.00f;
+  int _winsVsZerg = 0;
+  int _lossesVsZerg = 0;
+  float _zergWinPercentage = 0.00f;
+  std::string _path = "C:\\Facultate\\SCGames\\";
 
 public:
   Logger();

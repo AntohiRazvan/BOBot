@@ -207,7 +207,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
     }
   }
 }
-
+#include <iostream>
 void ExampleAIModule::onEnd(bool isWinner)
 {
   for (auto manager : _managers)

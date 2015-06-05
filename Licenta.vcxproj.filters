@@ -34,6 +34,12 @@
     <ClCompile Include="TerrainAnalyzer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="UnitProducer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -76,6 +82,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="TerrainAnalyzer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitProducer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

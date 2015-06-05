@@ -14,7 +14,7 @@ DWORD __stdcall BeginAnalysisInThread()
 
 TerrainAnalyzer::TerrainAnalyzer()
 {
-  readMap();
+
   CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BeginAnalysisInThread, 0, 0, NULL);
   _analyzed = false;
   _analysisJustFinished = false;

@@ -47,7 +47,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories);C:\Users\Razvan\Desktop\boost_1_58_0\;C:\Facultate\BWTAlib_2.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories);C:\Facultate\boost_1_56_0\;C:\Facultate\BWTAlib_2.2\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;WIN32;_DEBUG;_WINDOWS;_USRDLL;EXAMPLEAIMODULE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -63,16 +63,16 @@
       <SubSystem>Windows</SubSystem>
       <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>BWAPId.lib;C:\Facultate\BWTAlib_2.2\lib\BWTAd.lib;C:\Facultate\BWTAlib_2.2\lib\libCGAL-vc120-mt-4.4.lib;C:\Facultate\BWTAlib_2.2\lib\libCGAL-vc120-mt-gd-4.4.lib;C:\Facultate\BWTAlib_2.2\lib\libgmp-10.lib;C:\Facultate\BWTAlib_2.2\lib\libmpfr-4.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_thread-vc120-mt-gd-1_56.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_filesystem-vc120-mt-gd-1_56.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_system-vc120-mt-gd-1_56.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BWAPId.lib;C:\Facultate\BWTAlib_2.2\lib\BWTAd.lib;C:\Facultate\BWTAlib_2.2\lib\libCGAL-vc120-mt-4.4.lib;C:\Facultate\BWTAlib_2.2\lib\libCGAL-vc120-mt-gd-4.4.lib;C:\Facultate\BWTAlib_2.2\lib\libgmp-10.lib;C:\Facultate\BWTAlib_2.2\lib\libmpfr-4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions> /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalLibraryDirectories>C:\Users\Razvan\Desktop\boost_1_58_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Facultate\boost_1_56_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories);C:\Users\Razvan\Desktop\boost_1_58_0\;C:\Facultate\BWTAlib_2.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;%(AdditionalIncludeDirectories);C:\Facultate\boost_1_56_0;C:\Facultate\BWTAlib_2.2\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;WIN32;NDEBUG;_WINDOWS;_USRDLL;EXAMPLEAIMODULE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -90,6 +90,7 @@
       <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>BWAPI.lib;C:\Facultate\BWTAlib_2.2\lib\BWTA.lib;C:\Facultate\BWTAlib_2.2\lib\libgmp-10.lib;C:\Facultate\BWTAlib_2.2\lib\libmpfr-4.lib;C:\Facultate\BWTAlib_2.2\lib\libCGAL-vc120-mt-4.4.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_thread-vc120-mt-1_56.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_thread-vc120-mt-1_58.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_filesystem-vc120-mt-1_58.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_filesystem-vc120-mt-1_56.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_date_time-vc120-mt-1_58.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_system-vc120-mt-1_58.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_system-vc120-mt-1_56.lib;C:\Facultate\BWTAlib_2.2\lib\libboost_log-vc120-mt-1_58.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Facultate\boost_1_56_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -97,12 +98,14 @@
     <ClCompile Include="BuildingManager.cpp" />
     <ClCompile Include="BuildOrder.cpp" />
     <ClCompile Include="BuildTask.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="ProductionManager.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\Licenta.cpp" />
     <ClCompile Include="TerrainAnalyzer.cpp" />
+    <ClCompile Include="UnitProducer.cpp" />
     <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,12 +113,14 @@
     <ClInclude Include="BuildingManager.h" />
     <ClInclude Include="BuildOrder.h" />
     <ClInclude Include="BuildTask.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="ProductionManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Source\Licenta.h" />
     <ClInclude Include="TerrainAnalyzer.h" />
+    <ClInclude Include="UnitProducer.h" />
     <ClInclude Include="WorkerManager.h" />
   </ItemGroup>
   <ItemGroup>
