@@ -8,6 +8,7 @@
 #include "WorkerManager.h"
 #include "BuildTask.h"
 #include "Manager.h"
+
 #define MAX_SUPPLY 400
 
 struct CompareBuildTaskPriority 

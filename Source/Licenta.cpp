@@ -5,6 +5,7 @@ using namespace Filter;
 
 void ExampleAIModule::onStart()
 {
+  Broodwar->setGUI(false);
   TerrainAnalyzer::Instance();
   _resourceManager = new ResourceManager();
   _workerManager = new WorkerManager();

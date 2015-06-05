@@ -36,12 +36,24 @@ Logger::Logger()
 
 Logger::Logger(string filename)
 {
-  //logging::add_file_log
-  //  (
-  //  keywords::file_name = filename + "_%N",
-  //  keywords::format = "[%TimeStamp%][%Action%][%Target%]"
-  //  );
-  //_timeStamp = _logger.add_attribute("TimeStamp", attrs::function<int>(&GetFrameCount)).first;
+  ifstream statsFile(_path + "Statistics.txt");
+  if (statsFile.good())
+  {
+    string temp;
+    statsFile >> temp >> temp >> _gamesPlayed;
+    statsFile >> temp >> temp >> _gamesWon >> temp >> temp >> _gamesLost >> temp >> temp >> _winPercentage >> temp;
+    statsFile >> STRIP_TEXT >> _winsVsTerran >> STRIP_TEXT >> _lossesVsTerran >> temp >> temp >> _terranWinPercentage >> temp;
+    statsFile >> STRIP_TEXT >> _winsVsProtoss >> STRIP_TEXT >> _lossesVsProtoss >> temp >> temp >> _protossWinPercentage >> temp;
+    statsFile >> STRIP_TEXT >> _winsVsZerg >> STRIP_TEXT >> _lossesVsZerg >> temp >> temp >> _zergWinPercentage >> temp;
+  }
+  statsFile.close();
+
+  logging::add_file_log
+    (
+    keywords::file_name = filename + to_string(_gamesPlayed) + ".log",
+    keywords::format = "[%TimeStamp%][%Action%][%Target%]"
+    );
+  _timeStamp = _logger.add_attribute("TimeStamp", attrs::function<int>([](){return Broodwar->getFrameCount(); })).first;
 }
 
 void Logger::Log(string action, string target)
