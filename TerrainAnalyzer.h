@@ -15,6 +15,7 @@ class TerrainAnalyzer
   bool _analysisJustFinished;
 
   void _Analyze();
+  friend DWORD __stdcall BeginAnalysisInThread();
 
 public:
   static TerrainAnalyzer* Instance();
@@ -29,5 +30,5 @@ public:
   std::set<BWTA::BaseLocation*> GetStartLocations();
   std::set<BWTA::BaseLocation*> GetBaseLocations();
   double GetGroundDistance(BWAPI::TilePosition start, BWAPI::TilePosition end);
-  friend DWORD __stdcall BeginAnalysisInThread();
+
 };

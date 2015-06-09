@@ -14,8 +14,6 @@ ProductionManager::ProductionManager(ResourceManager *rm, BuildingManager *bm)
   _nexusProduction = new UnitProducer(rm);
   _nexusProduction->SetFocus(UnitTypes::Protoss_Probe);
   _gatewayProduction->SetFocus(UnitTypes::Protoss_Zealot);
-
-
 }
 
 

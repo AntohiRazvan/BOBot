@@ -5,22 +5,11 @@ using namespace Filter;
 
 void ExampleAIModule::onStart()
 {
+#ifdef GUI_DISABLED
   Broodwar->setGUI(false);
-  TerrainAnalyzer::Instance();
-  _resourceManager = new ResourceManager();
-  _workerManager = new WorkerManager();
-  _buildingManager = new BuildingManager(_workerManager, _resourceManager);
-  _productionManager = new ProductionManager(_resourceManager, _buildingManager);
-
-  _managers.push_back(_resourceManager);
-  _managers.push_back(_productionManager);
-  _managers.push_back(_buildingManager);
-  _managers.push_back(_workerManager);
-  
-#ifdef LOGGING_ENABLED
-  _log = new Logger();
-  _managers.push_back(_log);
 #endif
+
+  TerrainAnalyzer::Instance();
 
   // Print the map name.
   // BWAPI returns std::string when retrieving a string, don't forget to add .c_str() when printing!
@@ -64,12 +53,29 @@ void ExampleAIModule::onStart()
 void ExampleAIModule::onFrame()
 {
   TerrainAnalyzer::Instance()->DrawTerrainDataWhenAble();
-  static bool a = true;
-  if (a)
+  if (!_managersInitialised)
   {
+    _resourceManager = new ResourceManager();
+    _workerManager = new WorkerManager();
+    _buildingManager = new BuildingManager(_workerManager, _resourceManager);
+    _productionManager = new ProductionManager(_resourceManager, _buildingManager);
+    _armyManager = new ArmyManager();
+
+    _managers.push_back(_resourceManager);
+    _managers.push_back(_productionManager);
+    _managers.push_back(_buildingManager);
+    _managers.push_back(_workerManager);
+    _managers.push_back(_armyManager);
+
+#ifdef LOGGING_ENABLED
+    _log = new Logger();
+    _managers.push_back(_log);
+#endif
+
+    _managersInitialised = true;
+
     _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
     _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
-    a = false;
   }
 
   // Called once every game frame
@@ -134,30 +140,6 @@ void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
 #include <vector>
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
-  static TilePosition pos;
-  if (pos)
-  {
-    for (auto p : Broodwar->getStartLocations())
-    {
-      if (p != Broodwar->self()->getStartLocation())
-      {
-        pos = TilePosition(p);
-      }
-    }
-  }
-
-  static std::vector<BWAPI::Unit> units;
-  if (unit->getType() == UnitTypes::Protoss_Zealot)
-  {
-    units.push_back(unit);
-  }
-  if (units.size() > 4)
-  {
-    for (auto u : units)
-    {
-      u->attack(Position(pos));
-    }
-  }
   if (unit->getPlayer() == BWAPI::Broodwar->self())
   {
     for (auto manager : _managers)
