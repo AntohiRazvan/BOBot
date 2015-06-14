@@ -15,4 +15,3 @@ public:
   void AddWorker(BWAPI::Unit u);
   BWAPI::Unit GetWorker();
 };
-

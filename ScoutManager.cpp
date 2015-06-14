@@ -9,7 +9,6 @@ ScoutManager::ScoutManager(WorkerManager *wm)
   _scout = nullptr;
   _workerManager = wm;
   _terrainAnalyzer = TerrainAnalyzer::Instance();
-  InitialScout();
 }
 
 void ScoutManager::InitialScout()
@@ -30,10 +29,11 @@ void ScoutManager::Scout()
   {
     return;
   }
-  _lastScoutTime = Broodwar->getFrameCount();
+
   for (auto baseLocation : _terrainAnalyzer->GetBaseLocations())
   {
-    if (!BaseIsMine(baseLocation))
+    auto it = find(_enemyBaseLocations.begin(), _enemyBaseLocations.end(), baseLocation->getPosition());
+    if ((!BaseIsMine(baseLocation)) && (it == _enemyBaseLocations.end()))
     {
       _locationsToScout.push(baseLocation->getPosition());
     }
@@ -55,13 +55,18 @@ bool ScoutManager::BaseIsMine(BaseLocation* baseLocation)
 
 void ScoutManager::update()
 {
+  if (Broodwar->getFrameCount() == _initialScoutTime)
+  {
+    InitialScout();
+  }
+
   if (_locationsToScout.size() != 0)
   {
     if (!_scout)
     {
       _scout = _workerManager->GetWorker();
     }
-    if (_scout->getPosition().getApproxDistance(_locationsToScout.front()) < 10)  
+    if (_scout->getPosition().getApproxDistance(_locationsToScout.front()) < 15)  
     {      
       _locationsToScout.pop();
     }
@@ -73,6 +78,7 @@ void ScoutManager::update()
   {
     if (_scout)
     {
+      _lastScoutTime = Broodwar->getFrameCount();
       _workerManager->AddWorker(_scout);
       _scout = nullptr;
     }
@@ -84,6 +90,10 @@ void ScoutManager::onUnitDestroy(Unit unit)
   if (unit == _scout)
   {
     _scout = nullptr;
+    if (_locationsToScout.size() != 0)
+    {
+      _locationsToScout.pop();
+    }
   }
 }
 

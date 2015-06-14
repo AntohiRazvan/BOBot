@@ -7,7 +7,6 @@
 #include "TerrainAnalyzer.h"
 #include "WorkerManager.h"
 
-
 class ScoutManager : public Manager
 {
   WorkerManager *_workerManager;
@@ -16,8 +15,9 @@ class ScoutManager : public Manager
   std::vector<BWAPI::Position> _enemyBaseLocations;
   std::vector<BWAPI::Unit> _enemyBuildings;
   std::queue<BWAPI::Position> _locationsToScout;
-  int _scoutFrequency = 10000;
-  int _lastScoutTime = -(_scoutFrequency - 2000);
+  int _scoutFrequency = 1000;
+  int _lastScoutTime = 0;
+  int _initialScoutTime = 2000;
 
   bool BaseIsMine(BWTA::BaseLocation* baseLocation);
   void Scout();
@@ -32,4 +32,3 @@ public:
   void onUnitDestroy(BWAPI::Unit unit);
   void onEnemyUnitDiscover(BWAPI::Unit unit);
 };
-
