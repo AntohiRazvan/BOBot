@@ -8,6 +8,7 @@
 enum Stance
 {
   Idle,
+  Defending,
   Attacking
 };
 

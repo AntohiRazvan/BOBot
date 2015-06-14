@@ -102,6 +102,7 @@
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="ProductionManager.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ScoutManager.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
     <ClCompile Include="Source\Licenta.cpp" />
     <ClCompile Include="TerrainAnalyzer.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="ProductionManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ScoutManager.h" />
     <ClInclude Include="Source\Licenta.h" />
     <ClInclude Include="TerrainAnalyzer.h" />
     <ClInclude Include="UnitProducer.h" />

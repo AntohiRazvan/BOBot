@@ -25,6 +25,7 @@ private:
   std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildingsInQueue;
   std::list<BuildTask*> _buildingsInProgress;
   std::map<BWAPI::UnitType, int> _buildingsMade;
+  std::list<BWAPI::Position> _bases;
 
   WorkerManager *_workerManager;
   ResourceManager *_resourceManager;

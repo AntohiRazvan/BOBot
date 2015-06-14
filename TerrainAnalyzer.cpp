@@ -111,6 +111,7 @@ double TerrainAnalyzer::GetGroundDistance(TilePosition start, TilePosition end)
 
 void TerrainAnalyzer::DrawTerrainDataWhenAble()
 {
+#ifdef DRAWING_ENABLED
   if (_analyzed)
   {
     for (std::set<BWTA::BaseLocation*>::const_iterator i = BWTA::getBaseLocations().begin(); i != BWTA::getBaseLocations().end(); i++)
@@ -147,7 +148,6 @@ void TerrainAnalyzer::DrawTerrainDataWhenAble()
       }
     }
 
-    //we will visualize the chokepoints with red lines
     for (std::set<BWTA::Region*>::const_iterator r = BWTA::getRegions().begin(); r != BWTA::getRegions().end(); r++)
     {
       for (std::set<BWTA::Chokepoint*>::const_iterator c = (*r)->getChokepoints().begin(); c != (*r)->getChokepoints().end(); c++)
@@ -158,4 +158,5 @@ void TerrainAnalyzer::DrawTerrainDataWhenAble()
       }
     }
   }
+#endif
 }

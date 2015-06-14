@@ -54,7 +54,10 @@ void WorkerManager::onUnitComplete(BWAPI::Unit unit)
   }
 }
 
-void WorkerManager::onUnitCreate(BWAPI::Unit unit)
+void WorkerManager::onUnitDestroy(BWAPI::Unit unit)
 {
-
+  list<Unit>::iterator it = find(_buildingWorkerList.begin(), _buildingWorkerList.end(), unit);
+  if (it != _buildingWorkerList.end()) _buildingWorkerList.erase(it);
+  it = find(_gatheringWorkerList.begin(), _gatheringWorkerList.end(), unit);
+  if (it != _gatheringWorkerList.end()) _gatheringWorkerList.erase(it);
 }

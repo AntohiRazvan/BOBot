@@ -8,6 +8,7 @@
 #include "..\TerrainAnalyzer.h"
 #include "..\ProductionManager.h"
 #include "..\ArmyManager.h"
+#include "..\ScoutManager.h"
 #include "..\Logger.h"
 
 #define LOGGING_ENABLED
@@ -21,6 +22,7 @@ class ExampleAIModule : public BWAPI::AIModule
   ProductionManager *_productionManager;
   ArmyManager *_armyManager;
   Logger *_log;
+  ScoutManager *_scoutManager;
   std::list<Manager*> _managers;
 
 

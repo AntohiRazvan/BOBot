@@ -60,12 +60,14 @@ void ExampleAIModule::onFrame()
     _buildingManager = new BuildingManager(_workerManager, _resourceManager);
     _productionManager = new ProductionManager(_resourceManager, _buildingManager);
     _armyManager = new ArmyManager();
+    _scoutManager = new ScoutManager(_workerManager);
 
     _managers.push_back(_resourceManager);
     _managers.push_back(_productionManager);
     _managers.push_back(_buildingManager);
     _managers.push_back(_workerManager);
     _managers.push_back(_armyManager);
+    _managers.push_back(_scoutManager);
 
 #ifdef LOGGING_ENABLED
     _log = new Logger();
@@ -74,8 +76,8 @@ void ExampleAIModule::onFrame()
 
     _managersInitialised = true;
 
-    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
-    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
+   // _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
+    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
   }
 
   // Called once every game frame

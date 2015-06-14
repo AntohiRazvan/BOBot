@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "WorkerManager.h"
+#include "TerrainAnalyzer.h"
 
 enum Progress 
 {

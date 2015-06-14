@@ -40,6 +40,7 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="ScoutManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -87,6 +88,7 @@
     <ClInclude Include="Logger.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ScoutManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Licenta.rc" />

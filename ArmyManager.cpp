@@ -18,7 +18,9 @@ ArmyManager::ArmyManager()
 
 void ArmyManager::update()
 {
+#ifdef DRAWING_ENABLED
   Broodwar->drawCircleMap(_targetPosition, 32, Colors::Red);
+#endif
   TerrainAnalyzer *ta = TerrainAnalyzer::Instance();
   if (_targetPosition == Position(Broodwar->self()->getStartLocation()))
   {

@@ -11,7 +11,7 @@ public:
   WorkerManager();
   void update();
   void onUnitComplete(BWAPI::Unit unit);
-  void onUnitCreate(BWAPI::Unit unit);
+  void onUnitDestroy(BWAPI::Unit unit);
   void AddWorker(BWAPI::Unit u);
   BWAPI::Unit GetWorker();
 };

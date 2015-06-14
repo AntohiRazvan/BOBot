@@ -6,6 +6,8 @@
 #include <Windows.h>
 #include <set>
 
+#define DRAWING_ENABLED
+
 class TerrainAnalyzer
 {
   TerrainAnalyzer();
