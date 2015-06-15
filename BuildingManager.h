@@ -30,7 +30,7 @@ private:
   WorkerManager *_workerManager;
   ResourceManager *_resourceManager;
 
-  int _minSupplyLeft = 2;
+  int _minSupplyLeft = 4;
   bool _pylonInQueue = false;
   bool _firstPylonBuilt = false;
 

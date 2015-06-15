@@ -18,17 +18,19 @@ class BuildTask
 private:
   BWAPI::Unit _builder;
   BWAPI::UnitType _building;
-  BWAPI::TilePosition _position;
   int _mineralPrice;
   int _gasPrice;
   int _startTime;
+  bool _buildingPlaced;
   Priority _priority;
   Progress _progress;
   WorkerManager *_workerManager;
 
 public:
-  BuildTask(BWAPI::Unit builder, BWAPI::UnitType building, WorkerManager *workerManager);
-  BuildTask(BWAPI::Unit builder, BWAPI::UnitType building, WorkerManager *workerManager, Priority priority);
+  BWAPI::TilePosition _position;
+
+  BuildTask(BWAPI::UnitType building, WorkerManager *workerManager);
+  BuildTask(BWAPI::UnitType building, WorkerManager *workerManager, Priority priority);
   void StartBuidling();
   void SendBuilder();
   int GetMineralPrice();

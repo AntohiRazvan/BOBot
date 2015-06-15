@@ -14,7 +14,6 @@ DWORD __stdcall BeginAnalysisInThread()
 
 TerrainAnalyzer::TerrainAnalyzer()
 {
-
   CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BeginAnalysisInThread, 0, 0, NULL);
   _analyzed = false;
   _analysisJustFinished = false;
@@ -34,6 +33,11 @@ void TerrainAnalyzer::_Analyze()
   analyze();
   _analyzed = true;
   _analysisJustFinished = true;
+}
+
+bool TerrainAnalyzer::Analyzed()
+{
+  return _analyzed;
 }
 
 Chokepoint* TerrainAnalyzer::GetNearestChokepoint(Position position)
@@ -99,14 +103,53 @@ set<BaseLocation*> TerrainAnalyzer::GetBaseLocations()
   return set<BaseLocation*>();
 }
 
-TilePosition TerrainAnalyzer::GetMyBaseLocation()
+BaseLocation* TerrainAnalyzer::GetMyBaseLocation()
 {
-  return Broodwar->self()->getStartLocation();
+  return getStartLocation(Broodwar->self());
 }
 
 double TerrainAnalyzer::GetGroundDistance(TilePosition start, TilePosition end)
 {
   return getGroundDistance(start, end);
+}
+
+bool TerrainAnalyzer::BaseIsMine(Position baseLocation)
+{
+  auto units = Broodwar->getUnitsInRadius(baseLocation, 500);
+  for (auto unit : units)
+  {
+    if (unit->getType().isResourceDepot() && unit->getPlayer() == Broodwar->self())
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+TilePosition TerrainAnalyzer::GetNearestExpansionLocation(BaseLocation* lastExpansion)
+{
+  BaseLocation* location = nullptr;
+  double minDist = -1;
+  for (auto it = getBaseLocations().begin(); it != getBaseLocations().end(); it++)
+  {
+    double dist = lastExpansion->getGroundDistance(*it);
+    if ((dist > 0) && !(TerrainAnalyzer::Instance()->BaseIsMine((*it)->getPosition())))
+    {
+      if ((minDist == -1) || (dist < minDist))
+      {
+        minDist = dist;
+        location = *it;
+      }
+    }
+  }
+  if (location != nullptr)
+  {
+    return location->getTilePosition();
+  }
+  else
+  {
+    return TilePositions::Invalid;
+  }
 }
 
 void TerrainAnalyzer::DrawTerrainDataWhenAble()

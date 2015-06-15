@@ -33,24 +33,11 @@ void ScoutManager::Scout()
   for (auto baseLocation : _terrainAnalyzer->GetBaseLocations())
   {
     auto it = find(_enemyBaseLocations.begin(), _enemyBaseLocations.end(), baseLocation->getPosition());
-    if ((!BaseIsMine(baseLocation)) && (it == _enemyBaseLocations.end()))
+    if ((!_terrainAnalyzer->BaseIsMine(baseLocation->getPosition())) && (it == _enemyBaseLocations.end()))
     {
       _locationsToScout.push(baseLocation->getPosition());
     }
   }
-}
-
-bool ScoutManager::BaseIsMine(BaseLocation* baseLocation)
-{
-  auto units = Broodwar->getUnitsInRadius(baseLocation->getPosition(), 500);
-  for (auto unit : units)
-  {
-    if (unit->getType().isBuilding() && unit->getPlayer() == Broodwar->self())
-    {
-      return true;
-    }
-  }
-  return false;
 }
 
 void ScoutManager::update()
@@ -66,7 +53,7 @@ void ScoutManager::update()
     {
       _scout = _workerManager->GetWorker();
     }
-    if (_scout->getPosition().getApproxDistance(_locationsToScout.front()) < 15)  
+    if (_scout->getPosition().getApproxDistance(_locationsToScout.front()) < 25)  
     {      
       _locationsToScout.pop();
     }

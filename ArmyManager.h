@@ -9,7 +9,8 @@ enum Stance
 {
   Idle,
   Defending,
-  Attacking
+  Attacking,
+  SEARCH
 };
 
 class ArmyManager : public Manager

@@ -50,7 +50,7 @@ void ResourceManager::FreeGas(int gasToFree)
 
 void ResourceManager::onUnitCreate(Unit unit)
 {
-  if (Broodwar->getFrameCount() > 1)
+  if (Broodwar->getFrameCount() > 1 && unit->getType().isBuilding())
   {
     _reservedMinerals -= unit->getType().mineralPrice();
     _reservedGas -= unit->getType().gasPrice();

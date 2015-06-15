@@ -1,31 +1,37 @@
 #include "BuildTask.h"
 
 using namespace BWAPI;
+using namespace BWTA;
 
-BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManager)
+BuildTask::BuildTask(UnitType building, WorkerManager *workerManager)
 {
-  _builder = builder;
   _building = building;
   _mineralPrice = building.mineralPrice();
   _gasPrice = building.gasPrice();
-  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition(), 10);
   _progress = Progress::WAITING;
-  _priority = Priority::LOW;
+  _priority = Priority::MEDIUM;
   _startTime = 0;
   _workerManager = workerManager;
+  if (_building.isResourceDepot())
+  {
+    _position = TilePositions::Invalid;
+    _priority = Priority::HIGH;
+  }
 }
 
-BuildTask::BuildTask(Unit builder, UnitType building, WorkerManager *workerManager, Priority priority)
+BuildTask::BuildTask(UnitType building, WorkerManager *workerManager, Priority priority)
 {
-  _builder = builder;
   _building = building;
   _mineralPrice = building.mineralPrice();
   _gasPrice = building.gasPrice();
-  _position = Broodwar->getBuildLocation(building, (TilePosition)_builder->getPosition(), 10);
   _progress = Progress::WAITING;
   _priority = priority;
   _startTime = 0;
   _workerManager = workerManager;
+  if (_building.isResourceDepot())
+  {
+    _position = TilePositions::Invalid;
+  }
 }
 
 void BuildTask::StartBuidling()
@@ -34,15 +40,33 @@ void BuildTask::StartBuidling()
   {
     _builder = _workerManager->GetWorker();
   }
+  if (!Broodwar->canBuildHere(_position, _building))
+  {
+    _position = Broodwar->getBuildLocation(_building, (TilePosition)_builder->getPosition(), 50);
+  }
   _builder->build(_building, _position);
   _startTime = Broodwar->getFrameCount();
 }
 
 void BuildTask::SendBuilder()
 {
-  if (!Broodwar->canBuildHere(_position, _building))
+  _builder = _workerManager->GetWorker();
+  if (_builder)
   {
     _position = Broodwar->getBuildLocation(_building, (TilePosition)_builder->getPosition(), 20);
+  }
+  if (_building.isResourceDepot())
+  {
+      TerrainAnalyzer *ta = TerrainAnalyzer::Instance();
+      BaseLocation *baseLocation = ta->GetNearestBaseLocation(_workerManager->GetAllBases().back()->GetDropLocation()->getPosition());
+      _position = ta->GetNearestExpansionLocation(baseLocation);
+  }
+  else
+  {
+    if (!Broodwar->canBuildHere(_position, _building))
+    {
+      _position = Broodwar->getBuildLocation(_building, (TilePosition)_builder->getPosition(), 50);
+    }
   }
   if (_progress == Progress::WAITING)
   {
@@ -68,8 +92,8 @@ Priority BuildTask::GetPriority() const
  
 Progress BuildTask::GetProgress()
 {
-  if ((_builder->getTilePosition().getDistance(_position) < 10) &&
-      (_progress == Progress::WORKER_UNDERWAY))
+  if ((_progress == Progress::WORKER_UNDERWAY) &&
+      (_builder->getTilePosition().getApproxDistance(_position) < 10))
   {
     _progress = Progress::WORKER_ARRIVED;
   }
@@ -96,4 +120,3 @@ void BuildTask::FreeWorker()
 {
   _workerManager->AddWorker(_builder);
 }
-

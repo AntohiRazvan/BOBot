@@ -101,6 +101,7 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="ProductionManager.cpp" />
+    <ClCompile Include="ResourceGatheringManager.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScoutManager.cpp" />
     <ClCompile Include="Source\Dll.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Manager.h" />
     <ClInclude Include="ProductionManager.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceGatheringManager.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScoutManager.h" />
     <ClInclude Include="Source\Licenta.h" />

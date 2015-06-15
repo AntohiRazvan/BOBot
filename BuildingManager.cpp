@@ -12,8 +12,7 @@ BuildingManager::BuildingManager(WorkerManager *wm, ResourceManager *rm)
 
 void BuildingManager::AddBuildRequest(UnitType building, Priority priority)
 {
-  Unit builder = _workerManager->GetWorker();
-  BuildTask *buildTask = new BuildTask(builder, building, _workerManager, priority);
+  BuildTask *buildTask = new BuildTask(building, _workerManager, priority);
   _buildingsInQueue.push(buildTask);
 }
 
@@ -22,8 +21,13 @@ void BuildingManager::update()
   SupplyCheck();
   SendBuilders();
   StartBuilding();
-}
 
+  if (_buildingsInQueue.size() > 0)
+  {
+    Broodwar->drawCircleMap(Position(_buildingsInQueue.top()->_position), 20, Colors::Purple);
+  }
+}
+ 
 void BuildingManager::SupplyCheck()
 {
   int curMaxSupply = Broodwar->self()->supplyTotal();
@@ -49,9 +53,12 @@ void BuildingManager::SendBuilders()
 
     if (_resourceManager->CanAfford(bt->GetBuildingType()))
     {
-      _resourceManager->ReserveMinerals(bt->GetMineralPrice());
-      _resourceManager->ReserveGas(bt->GetGasPrice());
-      bt->SendBuilder();
+      if (bt->GetProgress() == Progress::WAITING)
+      {
+        _resourceManager->ReserveMinerals(bt->GetMineralPrice());
+        _resourceManager->ReserveGas(bt->GetGasPrice());
+        bt->SendBuilder();
+      }
     }
   }
 }

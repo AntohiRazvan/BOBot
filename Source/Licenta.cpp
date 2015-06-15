@@ -64,8 +64,8 @@ void ExampleAIModule::onFrame()
 
     _managers.push_back(_resourceManager);
     _managers.push_back(_productionManager);
-    _managers.push_back(_buildingManager);
     _managers.push_back(_workerManager);
+    _managers.push_back(_buildingManager);
     _managers.push_back(_armyManager);
     _managers.push_back(_scoutManager);
 
@@ -76,8 +76,11 @@ void ExampleAIModule::onFrame()
 
     _managersInitialised = true;
 
-   // _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
     _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
+    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
+    // _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
+   // _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
+  //  _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
   }
 
   // Called once every game frame

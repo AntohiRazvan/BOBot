@@ -19,7 +19,6 @@ class ScoutManager : public Manager
   int _lastScoutTime = 0;
   int _initialScoutTime = 2000;
 
-  bool BaseIsMine(BWTA::BaseLocation* baseLocation);
   void Scout();
   void InitialScout();
 

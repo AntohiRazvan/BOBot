@@ -24,10 +24,13 @@ void ArmyManager::update()
   TerrainAnalyzer *ta = TerrainAnalyzer::Instance();
   if (_targetPosition == Position(Broodwar->self()->getStartLocation()))
   {
-    Chokepoint *chokepoint = ta->GetNearestChokepoint(ta->GetMyBaseLocation());
-    if (chokepoint)
+    if (ta->Analyzed())
     {
-      _targetPosition = chokepoint->getCenter();
+      Chokepoint *chokepoint = ta->GetNearestChokepoint(ta->GetMyBaseLocation()->getPosition());
+      if (chokepoint)
+      {
+        _targetPosition = chokepoint->getCenter();
+      }
     }
   }
   if (_army.size() > 3)
