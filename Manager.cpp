@@ -21,6 +21,10 @@ void Manager::onUnitCreate(BWAPI::Unit unit)
   return;
 }
 
+void Manager::onUnitMorph(BWAPI::Unit unit)
+{
+  return;
+}
 
 void Manager::onUnitDestroy(BWAPI::Unit unit)
 {
@@ -28,6 +32,11 @@ void Manager::onUnitDestroy(BWAPI::Unit unit)
 }
 
 void Manager::onEnemyUnitDestroy(BWAPI::Unit unit)
+{
+  return;
+}
+
+void Manager::onEnemyUnitEvade(BWAPI::Unit unit)
 {
   return;
 }

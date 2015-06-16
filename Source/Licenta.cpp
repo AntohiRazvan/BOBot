@@ -61,6 +61,7 @@ void ExampleAIModule::onFrame()
     _workerManager = new WorkerManager(_productionManager);
     _scoutManager = new ScoutManager(_workerManager);
     _buildingManager = new BuildingManager(_workerManager, _resourceManager);
+    _buildOrder = new BuildOrder(_buildingManager, _productionManager);
 
     _managers.push_back(_resourceManager);
     _managers.push_back(_productionManager);
@@ -75,12 +76,6 @@ void ExampleAIModule::onFrame()
 #endif
 
     _managersInitialised = true;
-
-    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
-    _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
-    // _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Nexus);
-   // _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
-  //  _buildingManager->AddBuildRequest(BWAPI::UnitTypes::Protoss_Gateway);
   }
 
   // Called once every game frame
@@ -108,21 +103,21 @@ void ExampleAIModule::onSendText(std::string text)
 {
 }
 
-void ExampleAIModule::onReceiveText(BWAPI::Player player, std::string text)
+void ExampleAIModule::onReceiveText(Player player, std::string text)
 {
 }
 
-void ExampleAIModule::onPlayerLeft(BWAPI::Player player)
+void ExampleAIModule::onPlayerLeft(Player player)
 {
 }
 
-void ExampleAIModule::onNukeDetect(BWAPI::Position target)
+void ExampleAIModule::onNukeDetect(Position target)
 {
 }
 
-void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit)
+void ExampleAIModule::onUnitDiscover(Unit unit)
 {
-  if (!(unit->getPlayer() == BWAPI::Broodwar->self()))
+  if (!(unit->getPlayer() == Broodwar->self()))
   {
     for (auto manager : _managers)
     {
@@ -131,21 +126,29 @@ void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitEvade(BWAPI::Unit unit)
+void ExampleAIModule::onUnitEvade(Unit unit)
+{
+  if (!(unit->getPlayer() == Broodwar->self()))
+  {
+    for (auto manager : _managers)
+    {
+      manager->onEnemyUnitEvade(unit);
+    }
+  }
+}
+
+void ExampleAIModule::onUnitShow(Unit unit)
 {
 }
 
-void ExampleAIModule::onUnitShow(BWAPI::Unit unit)
-{
-}
-
-void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
+void ExampleAIModule::onUnitHide(Unit unit)
 {
 }
 #include <vector>
-void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
+void ExampleAIModule::onUnitCreate(Unit unit)
 {
-  if (unit->getPlayer() == BWAPI::Broodwar->self())
+  if (unit->getPlayer() == Broodwar->self() || 
+      unit->getPlayer() == Broodwar->neutral())
   {
     for (auto manager : _managers)
     {
@@ -154,9 +157,9 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
+void ExampleAIModule::onUnitDestroy(Unit unit)
 {
-  if (unit->getPlayer() == BWAPI::Broodwar->self())
+  if (unit->getPlayer() == Broodwar->self())
   {
     for (auto manager : _managers)
     {
@@ -172,11 +175,18 @@ void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitMorph(BWAPI::Unit unit)
+void ExampleAIModule::onUnitMorph(Unit unit)
 {
+  if (unit->getPlayer() == Broodwar->self())
+  {
+    for (auto manager : _managers)
+    {
+      manager->onUnitMorph(unit);
+    }
+  }
 }
 
-void ExampleAIModule::onUnitRenegade(BWAPI::Unit unit)
+void ExampleAIModule::onUnitRenegade(Unit unit)
 {
 }
 
@@ -185,9 +195,9 @@ void ExampleAIModule::onSaveGame(std::string gameName)
   Broodwar << "The game was saved to \"" << gameName << "\"" << std::endl;
 }
 
-void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
+void ExampleAIModule::onUnitComplete(Unit unit)
 {
-  if (unit->getPlayer() == BWAPI::Broodwar->self())
+  if (unit->getPlayer() == Broodwar->self())
   {
     for (auto manager : _managers)
     {
@@ -195,7 +205,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
     }
   }
 }
-#include <iostream>
+
 void ExampleAIModule::onEnd(bool isWinner)
 {
   for (auto manager : _managers)

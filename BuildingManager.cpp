@@ -13,7 +13,14 @@ BuildingManager::BuildingManager(WorkerManager *wm, ResourceManager *rm)
 void BuildingManager::AddBuildRequest(UnitType building, Priority priority)
 {
   BuildTask *buildTask = new BuildTask(building, _workerManager, priority);
-  _buildingsInQueue.push(buildTask);
+  if (building == UnitTypes::Protoss_Pylon)
+  {
+    _buildingsInQueue.push_front(buildTask);
+  }
+  else
+  {
+    _buildingsInQueue.push_back(buildTask);
+  }
 }
 
 void BuildingManager::update()
@@ -24,7 +31,7 @@ void BuildingManager::update()
 
   if (_buildingsInQueue.size() > 0)
   {
-    Broodwar->drawCircleMap(Position(_buildingsInQueue.top()->_position), 20, Colors::Purple);
+    Broodwar->drawCircleMap(Position(_buildingsInQueue.front()->_position), 20, Colors::Purple);
   }
 }
  
@@ -46,7 +53,7 @@ void BuildingManager::SendBuilders()
 {
   if (!_buildingsInQueue.empty())
   { 
-    BuildTask* bt = _buildingsInQueue.top();
+    BuildTask* bt = _buildingsInQueue.front();
 
     if ((!_firstPylonBuilt) && (bt->GetBuildingType() != UnitTypes::Protoss_Pylon))
       return;
@@ -67,7 +74,7 @@ void BuildingManager::StartBuilding()
 {
   if (!_buildingsInQueue.empty())
   {
-    BuildTask* bt = _buildingsInQueue.top();
+    BuildTask* bt = _buildingsInQueue.front();
     if (bt->GetProgress() == Progress::WORKER_ARRIVED)
     {
       if (bt->GetStartTime() + 15 < Broodwar->getFrameCount())
@@ -80,18 +87,40 @@ void BuildingManager::StartBuilding()
 
 void BuildingManager::onUnitCreate(BWAPI::Unit unit)
 {
+  if (unit->getType() == UnitTypes::Protoss_Assimilator)
+  {
+    for (auto bt : _buildingsInProgress)
+    {
+      if (bt->GetBuildingType() == UnitTypes::Protoss_Assimilator)
+      {
+        _buildingsInProgress.remove(bt);
+        map<BWAPI::UnitType, int>::iterator it = _buildingsMade.find(bt->GetBuildingType());
+        if (it != _buildingsMade.end())
+        {
+          it->second += 1;
+        }
+        else
+        {
+          _buildingsMade.insert(pair<BWAPI::UnitType, int>(bt->GetBuildingType(), 1));
+        }
+        delete(bt);
+        continue;
+      }
+    }
+  }
+  if (!unit->getType().isBuilding()) return;
   if (unit->getType() == BWAPI::UnitTypes::Protoss_Pylon)
   {
     _minSupplyLeft += 2;
   }
   if (!_buildingsInQueue.empty())
   {
-    BuildTask* bt = _buildingsInQueue.top();
+    BuildTask* bt = _buildingsInQueue.front();
     if (bt->GetBuildingType() == unit->getType())
     {
       bt->SetProgress(Progress::BUILDING);
       bt->FreeWorker();
-      _buildingsInQueue.pop();
+      _buildingsInQueue.pop_front();
       _buildingsInProgress.push_back(bt);
     }
   }
@@ -130,7 +159,6 @@ void BuildingManager::onUnitComplete(BWAPI::Unit unit)
   }
 }
 
-
 void BuildingManager::onUnitDestroy(Unit unit)
 {
   if (unit->getType() == UnitTypes::Protoss_Pylon)
@@ -138,6 +166,21 @@ void BuildingManager::onUnitDestroy(Unit unit)
     if (_pylonInQueue)
     {
       _pylonInQueue = false;
+    }
+  }
+}
+
+void BuildingManager::onUnitMorph(BWAPI::Unit unit)
+{
+  if (!_buildingsInQueue.empty())
+  {
+    BuildTask* bt = _buildingsInQueue.front();
+    if (bt->GetBuildingType() == unit->getType())
+    {
+      bt->SetProgress(Progress::BUILDING);
+      bt->FreeWorker();
+      _buildingsInQueue.pop_front();
+      _buildingsInProgress.push_back(bt);
     }
   }
 }

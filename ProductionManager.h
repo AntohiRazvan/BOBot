@@ -15,7 +15,8 @@ class ProductionManager : public Manager
   UnitProducer *_stargateProduction;
   UnitProducer *_roboProduction;
   UnitProducer *_nexusProduction;
-
+  UnitProducer *_reaverProduction;
+  UnitProducer *_carrierProduction;
 
 public:
   ProductionManager(ResourceManager *rm);

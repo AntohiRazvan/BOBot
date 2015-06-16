@@ -57,6 +57,15 @@ void ResourceManager::onUnitCreate(Unit unit)
   }
 }
 
+void ResourceManager::onUnitMorph(Unit unit)
+{
+  if (Broodwar->getFrameCount() > 1 && unit->getType().isBuilding())
+  {
+    _reservedMinerals -= unit->getType().mineralPrice();
+    _reservedGas -= unit->getType().gasPrice();
+  }
+}
+
 bool ResourceManager::CanAfford(UnitType unitType)
 {
   bool canAfford = true;

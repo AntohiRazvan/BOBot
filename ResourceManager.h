@@ -19,4 +19,5 @@ public:
   void FreeGas(int gasToFree);
   bool CanAfford(BWAPI::UnitType unitType);
   void onUnitCreate(BWAPI::Unit unit);
+  void onUnitMorph(BWAPI::Unit unit);
 };

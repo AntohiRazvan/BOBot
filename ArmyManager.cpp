@@ -6,7 +6,9 @@ using namespace BWTA;
 
 ArmyManager::ArmyManager()
 {
-  _targetPosition = Position(Broodwar->self()->getStartLocation());
+  _terrainAnalyzer = TerrainAnalyzer::Instance();
+  _idlePosition = Position(Broodwar->self()->getStartLocation());
+  _attackPosition = Position(Broodwar->self()->getStartLocation());
   for (auto p : Broodwar->getStartLocations())
   {
     if (p != Broodwar->self()->getStartLocation())
@@ -19,23 +21,24 @@ ArmyManager::ArmyManager()
 void ArmyManager::update()
 {
 #ifdef DRAWING_ENABLED
-  Broodwar->drawCircleMap(_targetPosition, 32, Colors::Red);
+  Broodwar->drawCircleMap(_idlePosition, 32, Colors::Yellow);
+  Broodwar->drawCircleMap(_attackPosition, 32, Colors::Red);
 #endif
-  TerrainAnalyzer *ta = TerrainAnalyzer::Instance();
-  if (_targetPosition == Position(Broodwar->self()->getStartLocation()))
+
+  if (_idlePosition == Position(Broodwar->self()->getStartLocation()))
   {
-    if (ta->Analyzed())
+    if (_terrainAnalyzer->Analyzed())
     {
-      Chokepoint *chokepoint = ta->GetNearestChokepoint(ta->GetMyBaseLocation()->getPosition());
+      Chokepoint *chokepoint = _terrainAnalyzer->GetNearestChokepoint(_terrainAnalyzer->GetMyBaseLocation()->getPosition());
       if (chokepoint)
       {
-        _targetPosition = chokepoint->getCenter();
+        _idlePosition = chokepoint->getCenter();
       }
     }
   }
   if (_army.size() > 3)
   {
-    _targetPosition = *_enemyBases.begin();
+    _attackPosition = *_enemyBases.begin();
   }
 
   if (_lastOrder + _cooldown < Broodwar->getFrameCount())
@@ -49,7 +52,7 @@ void ArmyManager::Attack()
 {
   for (auto u : _army)
   {
-    u->attack(_targetPosition);
+    u->attack(_attackPosition);
   }
 }
 
@@ -57,7 +60,7 @@ void ArmyManager::Move()
 {
   for (auto u : _army)
   {
-    u->move(_targetPosition);
+    u->move(_idlePosition);
   }
 }
 
@@ -89,6 +92,8 @@ void ArmyManager::onEnemyUnitDestroy(Unit unit)
 {
   if (!unit->getType().isBuilding())
   {
+    auto it = find(_visibleEnemyArmy.begin(), _visibleEnemyArmy.end(), unit);
+    if (it != _visibleEnemyArmy.end()) _visibleEnemyArmy.erase(it);
     return;
   }
   if (unit->getType().isResourceDepot())
@@ -109,7 +114,7 @@ void ArmyManager::onEnemyUnitDestroy(Unit unit)
 
 void ArmyManager::onEnemyUnitDiscover(Unit unit)
 {
-  if (!unit->getType().isBuilding())
+  if (unit->getType().isBuilding())
   {
     if (find(_enemyBuildings.begin(), _enemyBuildings.end(), unit) == _enemyBuildings.end())
     {
@@ -124,6 +129,17 @@ void ArmyManager::onEnemyUnitDiscover(Unit unit)
   }
   else
   {
-    _targetPosition = unit->getPosition();
+    _visibleEnemyArmy.push_back(unit);
+    _attackPosition = unit->getPosition();
+  }
+}
+
+void ArmyManager::onEnemyUnitEvade(Unit unit)
+{
+  if (!unit->getType().isBuilding())
+  {
+    auto it = find(_visibleEnemyArmy.begin(), _visibleEnemyArmy.end(), unit);
+    if (it != _visibleEnemyArmy.end()) _visibleEnemyArmy.erase(it);
+    return;
   }
 }

@@ -23,7 +23,8 @@ struct CompareBuildTaskPriority
 class BuildingManager : public Manager
 {
 private:
-  std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildingsInQueue;
+  //std::priority_queue<BuildTask*, std::vector<BuildTask*>, CompareBuildTaskPriority> _buildingsInQueue;
+  std::list<BuildTask*> _buildingsInQueue;
   std::list<BuildTask*> _buildingsInProgress;
   std::map<BWAPI::UnitType, int> _buildingsMade;
   std::list<BWAPI::Position> _bases;
@@ -45,5 +46,6 @@ public:
   void update();
   void onUnitComplete(BWAPI::Unit unit);
   void onUnitCreate(BWAPI::Unit unit);
+  void onUnitMorph(BWAPI::Unit unit);
   void onUnitDestroy(BWAPI::Unit unit);
 };

@@ -7,12 +7,16 @@ using namespace BWTA;
 ProductionManager::ProductionManager(ResourceManager *rm)
 {
   _resourceManager = rm;
+  _nexusProduction = new UnitProducer(rm);
   _gatewayProduction = new UnitProducer(rm);
   _stargateProduction = new UnitProducer(rm);
   _roboProduction = new UnitProducer(rm);
-  _nexusProduction = new UnitProducer(rm);
+  _reaverProduction = new UnitProducer(rm);
+  _carrierProduction = new UnitProducer(rm);
   _nexusProduction->SetFocus(UnitTypes::Protoss_Probe);
   _gatewayProduction->SetFocus(UnitTypes::Protoss_Zealot);
+  _reaverProduction->SetFocus(UnitTypes::Protoss_Scarab);
+  _carrierProduction->SetFocus(UnitTypes::Protoss_Interceptor);
 }
 
 
@@ -33,6 +37,14 @@ void ProductionManager::registerProductionBuilding(BWAPI::Unit unit)
   else if (unit->getType() == UnitTypes::Protoss_Nexus)
   {
     _nexusProduction->AddProducer(unit);
+  }
+  else if (unit->getType() == UnitTypes::Protoss_Reaver)
+  {
+    _reaverProduction->AddProducer(unit);
+  }
+  else if (unit->getType() == UnitTypes::Protoss_Carrier)
+  {
+    _carrierProduction->AddProducer(unit);
   }
 }
 
@@ -59,6 +71,14 @@ void ProductionManager::onUnitDestroy(BWAPI::Unit unit)
   else if (type == UnitTypes::Protoss_Nexus)
   {
     _nexusProduction->RemoveProducer(unit);
+  }
+  else if (unit->getType() == UnitTypes::Protoss_Reaver)
+  {
+    _reaverProduction->RemoveProducer(unit);
+  }
+  else if (unit->getType() == UnitTypes::Protoss_Carrier)
+  {
+    _carrierProduction->RemoveProducer(unit);
   }
 }
 
@@ -110,6 +130,8 @@ void ProductionManager::update()
   _gatewayProduction->Produce();
   _roboProduction->Produce();
   _stargateProduction->Produce();
+  _reaverProduction->Produce();
+  _carrierProduction->Produce();
 }
 
 void ProductionManager::HaltGatewayProduction()

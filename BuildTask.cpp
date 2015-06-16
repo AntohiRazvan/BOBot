@@ -12,11 +12,6 @@ BuildTask::BuildTask(UnitType building, WorkerManager *workerManager)
   _priority = Priority::MEDIUM;
   _startTime = 0;
   _workerManager = workerManager;
-  if (_building.isResourceDepot())
-  {
-    _position = TilePositions::Invalid;
-    _priority = Priority::HIGH;
-  }
 }
 
 BuildTask::BuildTask(UnitType building, WorkerManager *workerManager, Priority priority)
@@ -28,10 +23,6 @@ BuildTask::BuildTask(UnitType building, WorkerManager *workerManager, Priority p
   _priority = priority;
   _startTime = 0;
   _workerManager = workerManager;
-  if (_building.isResourceDepot())
-  {
-    _position = TilePositions::Invalid;
-  }
 }
 
 void BuildTask::StartBuidling()

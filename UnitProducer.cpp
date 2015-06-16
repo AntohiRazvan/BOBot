@@ -21,7 +21,7 @@ void UnitProducer::Produce()
 
   for (auto p : _producers)
   {
-    if (!p->isIdle())
+    if (p->isTraining())
     {
       continue;
     }

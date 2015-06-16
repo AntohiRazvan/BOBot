@@ -113,6 +113,11 @@ void WorkerManager::update()
     }
   }
 
+  for (Unit worker : _occupiedWorkerList)
+  {
+    Broodwar->drawTextMap(worker->getPosition(), "Builder");
+  }
+
   for (auto base : _bases)
   {
     base->update();
@@ -144,6 +149,7 @@ void WorkerManager::onUnitDestroy(BWAPI::Unit unit)
   if (it != _occupiedWorkerList.end()) _occupiedWorkerList.erase(it);
   it = find(_unassignedWorkerList.begin(), _unassignedWorkerList.end(), unit);
   if (it != _unassignedWorkerList.end()) _unassignedWorkerList.erase(it);
+
   list<ResourceGatheringManager*>::iterator base = find_if(_bases.begin(), _bases.end(), 
                                                     [unit](ResourceGatheringManager* base)
                                                     { if (base->GetDropLocation() == unit) return true;
