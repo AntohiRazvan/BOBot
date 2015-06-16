@@ -15,7 +15,7 @@ enum Priority
 
 class BuildTask 
 {
-private:
+  WorkerManager *_workerManager;
   BWAPI::Unit _builder;
   BWAPI::UnitType _building;
   int _mineralPrice;
@@ -24,7 +24,6 @@ private:
   bool _buildingPlaced;
   Priority _priority;
   Progress _progress;
-  WorkerManager *_workerManager;
 
 public:
   BWAPI::TilePosition _position;

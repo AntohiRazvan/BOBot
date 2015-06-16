@@ -4,10 +4,9 @@ using namespace std;
 using namespace BWAPI;
 using namespace BWTA;
 
-ProductionManager::ProductionManager(ResourceManager *rm, BuildingManager *bm)
+ProductionManager::ProductionManager(ResourceManager *rm)
 {
   _resourceManager = rm;
-  _buildingManager = bm;
   _gatewayProduction = new UnitProducer(rm);
   _stargateProduction = new UnitProducer(rm);
   _roboProduction = new UnitProducer(rm);
@@ -111,4 +110,44 @@ void ProductionManager::update()
   _gatewayProduction->Produce();
   _roboProduction->Produce();
   _stargateProduction->Produce();
+}
+
+void ProductionManager::HaltGatewayProduction()
+{
+  _gatewayProduction->Halt();
+}
+
+void ProductionManager::HaltStargateProduction()
+{
+  _stargateProduction->Halt();
+}
+
+void ProductionManager::HaltRoboProduction()
+{
+  _roboProduction->Halt();
+}
+
+void ProductionManager::HaltNexusProduction()
+{
+  _nexusProduction->Halt();
+}
+
+void ProductionManager::ResumeGatewayProduction()
+{
+  _gatewayProduction->Resume();
+}
+
+void ProductionManager::ResumeStargateProduction()
+{
+  _stargateProduction->Resume();
+}
+
+void ProductionManager::ResumeRoboProduction()
+{
+  _roboProduction->Resume();
+}
+
+void ProductionManager::ResumeNexusProduction()
+{
+  _nexusProduction->Resume();
 }

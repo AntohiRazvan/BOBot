@@ -4,23 +4,16 @@ using namespace std;
 using namespace BWAPI;
 using namespace Filter;
 
-WorkerManager::WorkerManager()
+WorkerManager::WorkerManager(ProductionManager *pm)
 {
-  for (auto u : Broodwar->self()->getUnits())
-  {
-    if (u->getType().isResourceDepot())
-    {
-      ResourceGatheringManager* base = new ResourceGatheringManager(u);
-      _bases.push_back(base);
-      break;
-    }
-  }
-
+  _workerCount = 0;
+  _productionManager = pm;
   for (auto u : Broodwar->self()->getUnits())
   {
     if (u->getType().isWorker())
     {
       AddWorker(u);
+      _workerCount++;
     }
   }
 }
@@ -81,6 +74,15 @@ Unit WorkerManager::GetWorker()
 
 void WorkerManager::update()
 {
+  if ((_workerCount > (_bases.size() * 24)) || (_workerCount > 80))
+  {
+    _productionManager->HaltNexusProduction();
+  }
+  else
+  {
+    _productionManager->ResumeNexusProduction();
+  }
+
   if (_unassignedWorkerList.size() > 0)
   {
     Unit unit = _unassignedWorkerList.front();
@@ -91,6 +93,15 @@ void WorkerManager::update()
         base->AddMineralGatherer(unit);
         _unassignedWorkerList.pop_front();
         break;
+      }
+      else if (base->GetMineralGatherers().size() > base->WorkersNeeded())
+      {
+        int surplusWorkers = base->WorkersNeeded() - base->GetMineralGatherers().size();
+        while (surplusWorkers > 0)
+        {
+          Unit worker = base->GetWorker();
+          _unassignedWorkerList.push_back(worker);
+        }
       }
     }
     if (unit->isIdle())
@@ -112,6 +123,7 @@ void WorkerManager::onUnitComplete(BWAPI::Unit unit)
 {
   if (unit->getType().isWorker())
   {
+    _workerCount++;
     AddWorker(unit);
   }
   if (unit->getType().isResourceDepot())
@@ -123,6 +135,11 @@ void WorkerManager::onUnitComplete(BWAPI::Unit unit)
 
 void WorkerManager::onUnitDestroy(BWAPI::Unit unit)
 {
+  if (!unit->getType().isWorker() || !unit->getType().isResourceDepot())
+  {
+    return;
+  }
+  if (unit->getType().isWorker()) _workerCount--;
   list<Unit>::iterator it = find(_occupiedWorkerList.begin(), _occupiedWorkerList.end(), unit);
   if (it != _occupiedWorkerList.end()) _occupiedWorkerList.erase(it);
   it = find(_unassignedWorkerList.begin(), _unassignedWorkerList.end(), unit);

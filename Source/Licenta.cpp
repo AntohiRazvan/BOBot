@@ -55,12 +55,12 @@ void ExampleAIModule::onFrame()
   TerrainAnalyzer::Instance()->DrawTerrainDataWhenAble();
   if (!_managersInitialised)
   {
-    _resourceManager = new ResourceManager();
-    _workerManager = new WorkerManager();
-    _buildingManager = new BuildingManager(_workerManager, _resourceManager);
-    _productionManager = new ProductionManager(_resourceManager, _buildingManager);
     _armyManager = new ArmyManager();
+    _resourceManager = new ResourceManager();
+    _productionManager = new ProductionManager(_resourceManager);
+    _workerManager = new WorkerManager(_productionManager);
     _scoutManager = new ScoutManager(_workerManager);
+    _buildingManager = new BuildingManager(_workerManager, _resourceManager);
 
     _managers.push_back(_resourceManager);
     _managers.push_back(_productionManager);

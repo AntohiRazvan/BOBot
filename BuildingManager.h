@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 #include "WorkerManager.h"
 #include "BuildTask.h"
+#include "ProductionManager.h"
 #include "Manager.h"
 
 #define MAX_SUPPLY 400
