@@ -7,6 +7,7 @@ BuildOrder::BuildOrder(BuildingManager *bm, ProductionManager *pm)
   _buildingManager = bm;
   _productionManager = pm;
 
+  pm->Train(UnitTypes::Protoss_Probe);
   pm->Train(UnitTypes::Protoss_Dragoon);
   pm->Train(UnitTypes::Protoss_Reaver);
 

@@ -13,12 +13,9 @@ ProductionManager::ProductionManager(ResourceManager *rm)
   _roboProduction = new UnitProducer(rm);
   _reaverProduction = new UnitProducer(rm);
   _carrierProduction = new UnitProducer(rm);
-  _nexusProduction->SetFocus(UnitTypes::Protoss_Probe);
-  _gatewayProduction->SetFocus(UnitTypes::Protoss_Zealot);
   _reaverProduction->SetFocus(UnitTypes::Protoss_Scarab);
   _carrierProduction->SetFocus(UnitTypes::Protoss_Interceptor);
 }
-
 
 void ProductionManager::registerProductionBuilding(BWAPI::Unit unit)
 {
@@ -126,6 +123,11 @@ void ProductionManager::Train(BWAPI::UnitType unitType, int count)
 
 void ProductionManager::update()
 {
+  if ((_resourceManager->GetMinerals() > _resourceManager->GetGas() * 10) &&
+      _resourceManager->GetGas() > 100)
+  {
+    _gatewayProduction->SetFocus(UnitTypes::Protoss_Zealot, 3);
+  }
   _nexusProduction->Produce();
   _gatewayProduction->Produce();
   _roboProduction->Produce();

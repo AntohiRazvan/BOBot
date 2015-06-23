@@ -18,6 +18,21 @@ ArmyManager::ArmyManager()
   }
 }
 
+void ArmyManager::UnderAttackCheck()
+{
+  if (_visibleEnemyArmy.size() != 0)
+  {
+    for (auto unit : Broodwar->getUnitsInRadius(_visibleEnemyArmy.front()->getPosition(), 400))
+    {
+      if ((unit->getType().isBuilding()) && (unit->getPlayer() == Broodwar->self()))
+      {
+        _attackPosition = _visibleEnemyArmy.front()->getPosition();
+        break;
+      }
+    }
+  }
+}
+
 void ArmyManager::update()
 {
 #ifdef DRAWING_ENABLED
@@ -36,10 +51,25 @@ void ArmyManager::update()
       }
     }
   }
-  if (_army.size() > 3)
+
+
+  if (_army.size() > 10)
   {
-    _attackPosition = *_enemyBases.begin();
+    if (_enemyBuildings.size() != 0)
+    {
+      _attackPosition = _enemyBuildings.front();
+    }
+    else
+    {
+      _attackPosition = *_enemyBases.begin();
+    }
   }
+  else
+  {
+    _attackPosition = _idlePosition;
+  }
+  UnderAttackCheck();
+
 
   if (_lastOrder + _cooldown < Broodwar->getFrameCount())
   {
@@ -98,14 +128,14 @@ void ArmyManager::onEnemyUnitDestroy(Unit unit)
   }
   if (unit->getType().isResourceDepot())
   {
-    list<Position>::iterator it = find(_enemyBases.begin(), _enemyBases.end(), unit->getPosition());
+    auto it = find(_enemyBases.begin(), _enemyBases.end(), unit->getPosition());
     if (it != _enemyBases.end())
     {
       _enemyBases.erase(it);
     }
   }
 
-  list<Unit>::iterator it = find(_enemyBuildings.begin(), _enemyBuildings.end(), unit);
+  auto it = find(_enemyBuildings.begin(), _enemyBuildings.end(), unit->getPosition());
   if (it != _enemyBuildings.end())
   {
     _enemyBuildings.erase(it);
@@ -116,7 +146,7 @@ void ArmyManager::onEnemyUnitDiscover(Unit unit)
 {
   if (unit->getType().isBuilding())
   {
-    if (find(_enemyBuildings.begin(), _enemyBuildings.end(), unit) == _enemyBuildings.end())
+    if (find(_enemyBuildings.begin(), _enemyBuildings.end(), unit->getPosition()) != _enemyBuildings.end())
     {
       return;
     }
@@ -125,7 +155,7 @@ void ArmyManager::onEnemyUnitDiscover(Unit unit)
     {
       _enemyBases.push_back(unit->getPosition());
     }
-    _enemyBuildings.push_back(unit);
+    _enemyBuildings.push_back(unit->getPosition());
   }
   else
   {
