@@ -94,10 +94,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Action.cpp" />
     <ClCompile Include="ArmyManager.cpp" />
     <ClCompile Include="BuildingManager.cpp" />
     <ClCompile Include="BuildOrder.cpp" />
     <ClCompile Include="BuildTask.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="ProductionManager.cpp" />
@@ -111,10 +113,12 @@
     <ClCompile Include="WorkerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
     <ClInclude Include="ArmyManager.h" />
     <ClInclude Include="BuildingManager.h" />
     <ClInclude Include="BuildOrder.h" />
     <ClInclude Include="BuildTask.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="ProductionManager.h" />
