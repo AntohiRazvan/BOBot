@@ -19,4 +19,3 @@ public:
   friend std::istream& operator>>(std::istream& is, Item& item);
   friend bool operator==(const Item& item1, const Item& item2);
 };
-

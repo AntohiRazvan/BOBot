@@ -1,22 +1,58 @@
 #include "BuildOrder.h"
 
+using namespace std;
 using namespace BWAPI;
 
 BuildOrder::BuildOrder(BuildingManager *bm, ProductionManager *pm)
 {
   _buildingManager = bm;
   _productionManager = pm;
+  ReadBuildOrder();
+}
 
-  pm->Train(UnitTypes::Protoss_Probe);
-  pm->Train(UnitTypes::Protoss_Dragoon);
-  pm->Train(UnitTypes::Protoss_Reaver);
 
-  bm->AddBuildRequest(UnitTypes::Protoss_Gateway);
-  bm->AddBuildRequest(UnitTypes::Protoss_Assimilator);
-  bm->AddBuildRequest(UnitTypes::Protoss_Nexus);
-  bm->AddBuildRequest(UnitTypes::Protoss_Cybernetics_Core);
-  bm->AddBuildRequest(UnitTypes::Protoss_Robotics_Facility);
-  bm->AddBuildRequest(UnitTypes::Protoss_Robotics_Support_Bay);
-  bm->AddBuildRequest(UnitTypes::Protoss_Gateway);
-  bm->AddBuildRequest(UnitTypes::Protoss_Gateway);
+void BuildOrder::ReadBuildOrder()
+{
+  ifstream in(_fileName);
+  while (in.good())
+  {
+    Item *item = new Item();
+    in >> *item;
+    
+    BWAPI::UnitType unit;
+    int count;
+    switch (item->GetAction())
+    {
+      case 1:
+      {
+        unit = item->GetParameters()[0];
+        count = item->GetParameters()[1];
+        for (int i = 0; i < count; i++)
+        {
+          _buildingManager->AddBuildRequest(unit);
+        }
+        break;
+      }
+      case 2:
+      {
+         unit = item->GetParameters()[0];
+         count = item->GetParameters()[1];
+         if (count == 0)
+         {
+           _productionManager->Train(unit);
+         }
+         else
+         {
+           _productionManager->Train(unit, count);
+         }
+         break;
+      case 3:
+      {
+         //TODO: Add attack support
+      }
+      }
+
+    }
+
+  }
 }
