@@ -13,8 +13,9 @@
 #include "..\BuildOrder.h"
 
 #define LOGGING_ENABLED
+#define GUI_DISABLED
 
-class ExampleAIModule : public BWAPI::AIModule
+class BWBOB : public BWAPI::AIModule
 {
   bool _managersInitialised = false;
   WorkerManager *_workerManager;

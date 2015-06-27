@@ -14,6 +14,8 @@ enum Stance
 
 class ArmyManager : public Manager
 {
+  int _maxArmySize = 0;
+  bool _isAttacking = false;
   TerrainAnalyzer *_terrainAnalyzer;
   std::list<BWAPI::Unit> _army;
   std::list<BWAPI::Position> _enemyBuildings;
@@ -25,11 +27,11 @@ class ArmyManager : public Manager
   int _cooldown = 30;
   int _lastOrder = 0;
 
-  void Attack();
   void Move();
   void UnderAttackCheck();
 public:
   ArmyManager();
+  void Attack();
 
   void update();
   void onUnitComplete(BWAPI::Unit unit);

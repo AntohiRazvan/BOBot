@@ -11,6 +11,7 @@ public:
   Item();
   void SetAction(Actions action);
   Actions GetAction();
+  void DecrementCount();
 
   void AddParameter(int param);
   std::vector<int> GetParameters();

@@ -3,7 +3,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-void ExampleAIModule::onStart()
+void BWBOB::onStart()
 {
 #ifdef GUI_DISABLED
   Broodwar->setGUI(false);
@@ -11,46 +11,28 @@ void ExampleAIModule::onStart()
 
   TerrainAnalyzer::Instance();
 
-  // Print the map name.
-  // BWAPI returns std::string when retrieving a string, don't forget to add .c_str() when printing!
   Broodwar << "The map is " << Broodwar->mapName() << "!" << std::endl;
   Broodwar->enableFlag(Flag::UserInput);
-
-  // Uncomment the following line and the bot will know about everything through the fog of war (cheat).
-  //Broodwar->enableFlag(Flag::CompleteMapInformation);
-
-  // Set the command optimization level so that common commands can be grouped
-  // and reduce the bot's APM (Actions Per Minute).
   Broodwar->setCommandOptimizationLevel(2);
 
-  // Check if this is a replay
-  if ( Broodwar->isReplay() )
+  if (Broodwar->isReplay())
   {
-
-    // Announce the players in the replay
     Broodwar << "The following players are in this replay:" << std::endl;
- 
-    // Iterate all the players in the game using a std:: iterator
     Playerset players = Broodwar->getPlayers();
-    for(auto p : players)
+    for (auto p : players)
     {
-      // Only print the player if they are not an observer
-      if ( !p->isObserver() )
+      if (!p->isObserver())
         Broodwar << p->getName() << ", playing as " << p->getRace() << std::endl;
     }
-
   }
-  else // if this is not a replay
+  else
   {
-    // Retrieve you and your enemy's races. enemy() will just return the first enemy.
-    // If you wish to deal with multiple enemies then you must use enemies().
-    if ( Broodwar->enemy() ) // First make sure there is an enemy
+    if (Broodwar->enemy())
       Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
   }
-
 }
 
-void ExampleAIModule::onFrame()
+void BWBOB::onFrame()
 {
   TerrainAnalyzer::Instance()->DrawTerrainDataWhenAble();
   if (!_managersInitialised)
@@ -61,7 +43,7 @@ void ExampleAIModule::onFrame()
     _workerManager = new WorkerManager(_productionManager);
     _scoutManager = new ScoutManager(_workerManager);
     _buildingManager = new BuildingManager(_workerManager, _resourceManager);
-    _buildOrder = new BuildOrder(_buildingManager, _productionManager);
+    _buildOrder = new BuildOrder(_buildingManager, _productionManager, _armyManager);
 
     _managers.push_back(_resourceManager);
     _managers.push_back(_productionManager);
@@ -69,6 +51,7 @@ void ExampleAIModule::onFrame()
     _managers.push_back(_buildingManager);
     _managers.push_back(_armyManager);
     _managers.push_back(_scoutManager);
+    _managers.push_back(_buildOrder);
 
 #ifdef LOGGING_ENABLED
     _log = new Logger();
@@ -78,18 +61,12 @@ void ExampleAIModule::onFrame()
     _managersInitialised = true;
   }
 
-  // Called once every game frame
-
-  // Display the game frame rate as text in the upper left area of the screen
   Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
   Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
 
-  // Return if the game is a replay or is paused
   if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
     return;
 
-  // Prevent spamming by only running our onFrame once every number of latency frames.
-  // Latency frames are the number of frames before commands are processed.
   if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
     return;
 
@@ -99,25 +76,26 @@ void ExampleAIModule::onFrame()
   } 
  }
 
-void ExampleAIModule::onSendText(std::string text)
+void BWBOB::onSendText(std::string text)
 {
 }
 
-void ExampleAIModule::onReceiveText(Player player, std::string text)
+void BWBOB::onReceiveText(Player player, std::string text)
 {
 }
 
-void ExampleAIModule::onPlayerLeft(Player player)
+void BWBOB::onPlayerLeft(Player player)
 {
 }
 
-void ExampleAIModule::onNukeDetect(Position target)
+void BWBOB::onNukeDetect(Position target)
 {
 }
 
-void ExampleAIModule::onUnitDiscover(Unit unit)
+void BWBOB::onUnitDiscover(Unit unit)
 {
-  if (!(unit->getPlayer() == Broodwar->self()))
+  if (!(unit->getPlayer() == Broodwar->self()) &&
+      !(unit->getPlayer() == Broodwar->neutral()))
   {
     for (auto manager : _managers)
     {
@@ -126,9 +104,10 @@ void ExampleAIModule::onUnitDiscover(Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitEvade(Unit unit)
+void BWBOB::onUnitEvade(Unit unit)
 {
-  if (!(unit->getPlayer() == Broodwar->self()))
+  if (!(unit->getPlayer() == Broodwar->self()) &&
+      !(unit->getPlayer() == Broodwar->neutral()))
   {
     for (auto manager : _managers)
     {
@@ -137,15 +116,15 @@ void ExampleAIModule::onUnitEvade(Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitShow(Unit unit)
+void BWBOB::onUnitShow(Unit unit)
 {
 }
 
-void ExampleAIModule::onUnitHide(Unit unit)
+void BWBOB::onUnitHide(Unit unit)
 {
 }
-#include <vector>
-void ExampleAIModule::onUnitCreate(Unit unit)
+
+void BWBOB::onUnitCreate(Unit unit)
 {
   if (unit->getPlayer() == Broodwar->self() || 
       unit->getPlayer() == Broodwar->neutral())
@@ -157,7 +136,7 @@ void ExampleAIModule::onUnitCreate(Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitDestroy(Unit unit)
+void BWBOB::onUnitDestroy(Unit unit)
 {
   if (unit->getPlayer() == Broodwar->self())
   {
@@ -175,9 +154,10 @@ void ExampleAIModule::onUnitDestroy(Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitMorph(Unit unit)
+void BWBOB::onUnitMorph(Unit unit)
 {
-  if (unit->getPlayer() == Broodwar->self())
+  if (unit->getPlayer() == Broodwar->self() || 
+      unit->getPlayer() == Broodwar->neutral())
   {
     for (auto manager : _managers)
     {
@@ -186,16 +166,16 @@ void ExampleAIModule::onUnitMorph(Unit unit)
   }
 }
 
-void ExampleAIModule::onUnitRenegade(Unit unit)
+void BWBOB::onUnitRenegade(Unit unit)
 {
 }
 
-void ExampleAIModule::onSaveGame(std::string gameName)
+void BWBOB::onSaveGame(std::string gameName)
 {
   Broodwar << "The game was saved to \"" << gameName << "\"" << std::endl;
 }
 
-void ExampleAIModule::onUnitComplete(Unit unit)
+void BWBOB::onUnitComplete(Unit unit)
 {
   if (unit->getPlayer() == Broodwar->self())
   {
@@ -206,7 +186,7 @@ void ExampleAIModule::onUnitComplete(Unit unit)
   }
 }
 
-void ExampleAIModule::onEnd(bool isWinner)
+void BWBOB::onEnd(bool isWinner)
 {
   for (auto manager : _managers)
   {

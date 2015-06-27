@@ -38,7 +38,10 @@ void WorkerManager::AddWorker(Unit u)
   _unassignedWorkerList.push_front(u);
   if (_bases.size() != 0)
   {
-    u->gather(_bases.back()->GetDropLocation()->getClosestUnit(IsMineralField));
+    if (_bases.back()->GetDropLocation()->getClosestUnit(IsMineralField) != nullptr)
+    {
+      u->gather(_bases.back()->GetDropLocation()->getClosestUnit(IsMineralField));
+    }
   }
 }
 

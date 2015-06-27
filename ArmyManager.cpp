@@ -22,7 +22,7 @@ void ArmyManager::UnderAttackCheck()
 {
   if (_visibleEnemyArmy.size() != 0)
   {
-    for (auto unit : Broodwar->getUnitsInRadius(_visibleEnemyArmy.front()->getPosition(), 400))
+    for (auto unit : Broodwar->getUnitsInRadius(_visibleEnemyArmy.front()->getPosition(), 600))
     {
       if ((unit->getType().isBuilding()) && (unit->getPlayer() == Broodwar->self()))
       {
@@ -53,37 +53,45 @@ void ArmyManager::update()
   }
 
 
-  if (_army.size() > 10)
+
+  if (_enemyBuildings.size() != 0)
   {
-    if (_enemyBuildings.size() != 0)
-    {
-      _attackPosition = _enemyBuildings.front();
-    }
-    else
-    {
-      _attackPosition = *_enemyBases.begin();
-    }
+    _attackPosition = _enemyBuildings.front();
   }
   else
   {
-    _attackPosition = _idlePosition;
+    _attackPosition = *_enemyBases.begin();
   }
-  UnderAttackCheck();
-
 
   if (_lastOrder + _cooldown < Broodwar->getFrameCount())
   {
     _lastOrder = Broodwar->getFrameCount();
-    Attack();
+    if (_isAttacking)
+    {
+      if (_maxArmySize > 10 && _army.size() > 6)
+      {
+        for (auto u : _army)
+        {
+          u->attack(_attackPosition);
+        }
+      }
+      else
+      {
+        Move();
+      }
+    }
+    else
+    {
+      Move();
+    }
   }
+
+  UnderAttackCheck();
 }
 
 void ArmyManager::Attack()
 {
-  for (auto u : _army)
-  {
-    u->attack(_attackPosition);
-  }
+  _isAttacking = true;
 }
 
 void ArmyManager::Move()
@@ -100,7 +108,8 @@ void ArmyManager::onUnitComplete(Unit unit)
   {
     return;
   }
-  Attack();
+  Move();
+  _maxArmySize++;
   _army.push_back(unit);
 }
 
@@ -153,9 +162,9 @@ void ArmyManager::onEnemyUnitDiscover(Unit unit)
 
     if (unit->getType().isResourceDepot())
     {
-      _enemyBases.push_back(unit->getPosition());
+      _enemyBases.push_front(unit->getPosition());
     }
-    _enemyBuildings.push_back(unit->getPosition());
+    _enemyBuildings.push_front(unit->getPosition());
   }
   else
   {

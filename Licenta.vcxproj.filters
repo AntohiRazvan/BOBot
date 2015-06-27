@@ -46,8 +46,12 @@
     <ClCompile Include="ScoutManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp" />
-    <ClCompile Include="Action.cpp" />
+    <ClCompile Include="Action.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -101,8 +105,12 @@
     <ClInclude Include="ScoutManager.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h" />
-    <ClInclude Include="Action.h" />
+    <ClInclude Include="Action.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Licenta.rc" />

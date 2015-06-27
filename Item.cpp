@@ -27,6 +27,11 @@ vector<int> Item::GetParameters()
   return _parameters;
 }
 
+void Item::DecrementCount()
+{
+  _parameters[1]--;
+}
+
 ostream& operator<<(ostream& os, const Item& item)
 {
   if (item._action != 0)
