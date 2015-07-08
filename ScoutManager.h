@@ -15,7 +15,7 @@ class ScoutManager : public Manager
   std::vector<BWAPI::Position> _enemyBaseLocations;
   std::vector<BWAPI::Unit> _enemyBuildings;
   std::queue<BWAPI::Position> _locationsToScout;
-  int _scoutFrequency = 1000;
+  int _scoutFrequency = 10000;
   int _lastScoutTime = 0;
   int _initialScoutTime = 2500;
 

@@ -11,6 +11,7 @@ class WorkerManager : public Manager
   std::list<ResourceGatheringManager*> _bases;
   std::list<BWAPI::Unit> _unassignedWorkerList;
   std::list<BWAPI::Unit> _occupiedWorkerList;
+  std::list<BWAPI::Unit> _workersToBeAdded;
   int _workerCount;
 
 public:

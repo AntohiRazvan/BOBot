@@ -46,19 +46,23 @@ void ScoutManager::update()
   {
     InitialScout();
   }
-
+  Scout();
   if (_locationsToScout.size() != 0)
   {
     if (!_scout)
     {
       _scout = _workerManager->GetWorker();
     }
-    if (_scout->getPosition().getApproxDistance(_locationsToScout.front()) < 25)  
-    {      
-      _locationsToScout.pop();
-    }
-    else { 
-      _scout->move(_locationsToScout.front());
+    if (_scout)
+    {
+      if (_scout->getPosition().getApproxDistance(_locationsToScout.front()) < 50)
+      {
+        _locationsToScout.pop();
+      }
+      else
+      {
+        _scout->move(_locationsToScout.front());
+      }
     }
   }
   else

@@ -16,6 +16,7 @@ class ArmyManager : public Manager
 {
   int _maxArmySize = 0;
   bool _isAttacking = false;
+  bool _isDefending = false;
   TerrainAnalyzer *_terrainAnalyzer;
   std::list<BWAPI::Unit> _army;
   std::list<BWAPI::Position> _enemyBuildings;
@@ -26,6 +27,9 @@ class ArmyManager : public Manager
   Stance _stance = Stance::Idle;
   int _cooldown = 30;
   int _lastOrder = 0;
+
+  int _lastBuildingPop = 0;
+  int _enemyBuildingPopRate = 2000;
 
   void Move();
   void UnderAttackCheck();

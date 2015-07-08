@@ -128,6 +128,11 @@ bool TerrainAnalyzer::BaseIsMine(Position baseLocation)
 
 TilePosition TerrainAnalyzer::GetNearestExpansionLocation(BaseLocation* lastExpansion)
 {
+  if (!lastExpansion)
+  {
+    return TilePositions::Invalid;
+  }
+
   BaseLocation* location = nullptr;
   double minDist = -1;
   for (auto it = getBaseLocations().begin(); it != getBaseLocations().end(); it++)
@@ -163,12 +168,17 @@ void TerrainAnalyzer::DrawTerrainDataWhenAble()
       Position c = (*i)->getPosition();
 
       Broodwar->drawBoxMap(p.x * 32, p.y * 32, p.x * 32 + 4 * 32, p.y * 32 + 3 * 32, Colors::Blue);
-
-      for (Unitset::iterator j = (*i)->getStaticMinerals().begin(); j != (*i)->getStaticMinerals().end(); j++)
+      /*   if ((*i)->getStaticMinerals().size() > 0)
       {
-        Position q = (*j)->getInitialPosition();
-        Broodwar->drawCircleMap(q.x, q.y, 30, Colors::Cyan);
-      }
+        for (Unitset::iterator j = (*i)->getStaticMinerals().begin(); j != (*i)->getStaticMinerals().end(); j++)
+        {
+          if (j != (*i)->getStaticMinerals().end())
+          {
+            Position q = (*j)->getInitialPosition();
+            Broodwar->drawCircleMap(q.x, q.y, 30, Colors::Cyan);
+          }
+        }
+      }*/
 
       for (Unitset::iterator j = (*i)->getGeysers().begin(); j != (*i)->getGeysers().end(); j++)
       {

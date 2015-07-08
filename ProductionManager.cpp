@@ -124,14 +124,14 @@ void ProductionManager::Train(BWAPI::UnitType unitType, int count)
 void ProductionManager::update()
 {
   if ((_resourceManager->GetMinerals() > _resourceManager->GetGas() * 10) &&
-      _resourceManager->GetGas() > 100)
+      _resourceManager->GetGas() < 100 && Broodwar->getFrameCount() > 30000)
   {
     _gatewayProduction->SetFocus(UnitTypes::Protoss_Zealot, 3);
   }
   _nexusProduction->Produce();
-  _gatewayProduction->Produce();
   _roboProduction->Produce();
   _stargateProduction->Produce();
+  _gatewayProduction->Produce();
   _reaverProduction->Produce();
   _carrierProduction->Produce();
 }

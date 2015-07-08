@@ -33,8 +33,14 @@ list<ResourceGatheringManager*> WorkerManager::GetAllBases()
 
 void WorkerManager::AddWorker(Unit u)
 {
+  if (!u && !u->getType().isWorker())
+  {
+    return;
+  }
+
   list<Unit>::iterator it = find(_occupiedWorkerList.begin(), _occupiedWorkerList.end(), u);
   if (it != _occupiedWorkerList.end()) _occupiedWorkerList.erase(it);
+  //_workersToBeAdded.push_front(u);
   _unassignedWorkerList.push_front(u);
   if (_bases.size() != 0)
   {
@@ -42,7 +48,7 @@ void WorkerManager::AddWorker(Unit u)
     {
       u->gather(_bases.back()->GetDropLocation()->getClosestUnit(IsMineralField));
     }
-  }
+  } 
 }
 
 Unit WorkerManager::GetWorker()
@@ -85,6 +91,31 @@ void WorkerManager::update()
   {
     _productionManager->ResumeNexusProduction();
   }
+  if ((_bases.size() != 0) && (_workersToBeAdded.size() != 0))
+  {
+    for (auto worker : _workersToBeAdded)
+    {
+      worker->gather(_bases.back()->GetDropLocation()->getClosestUnit(IsMineralField));
+      auto units = worker->getUnitsInRadius(800);
+      for (Unit unit : units)
+      {
+        if (unit->getPlayer() == Broodwar->self() && unit->getType().isBuilding())
+        {
+          if (_bases.size() != 0)
+          {
+            if (_bases.back()->GetDropLocation()->getClosestUnit(IsMineralField) != nullptr)
+            {
+              auto it = find(_workersToBeAdded.begin(), _workersToBeAdded.end(), worker);
+              if (it != _workersToBeAdded.end()) _workersToBeAdded.erase(it);
+              _unassignedWorkerList.push_back(worker);
+              goto exit;
+            }
+          }
+        }
+      }
+    }
+  }
+  exit:
 
   if (_unassignedWorkerList.size() > 0)
   {
@@ -107,7 +138,7 @@ void WorkerManager::update()
         }
       }
     }
-    if (unit->isIdle())
+    if (unit && unit->isIdle())
     {
       if (_bases.size() != 0)
       {

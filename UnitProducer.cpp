@@ -26,9 +26,9 @@ void UnitProducer::Produce()
       continue;
     }
     
-    if ((_tempFocusCount > 0) && (_tempFocus) && (p->canTrain(_tempFocus)))
+    if ((_tempFocusCount >= 0) && (_tempFocus))
     {
-      if (_resourceManager->CanAfford(_tempFocus))
+      if (_resourceManager->CanAfford(_tempFocus) && (p->canTrain(_tempFocus)))
       {
         p->train(_tempFocus);
         _tempFocusCount--;

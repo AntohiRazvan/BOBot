@@ -13,7 +13,7 @@
 #include "..\BuildOrder.h"
 
 #define LOGGING_ENABLED
-#define GUI_DISABLED
+//#define GUI_DISABLED
 
 class BWBOB : public BWAPI::AIModule
 {

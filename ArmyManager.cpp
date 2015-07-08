@@ -22,11 +22,12 @@ void ArmyManager::UnderAttackCheck()
 {
   if (_visibleEnemyArmy.size() != 0)
   {
-    for (auto unit : Broodwar->getUnitsInRadius(_visibleEnemyArmy.front()->getPosition(), 600))
+    for (auto unit : Broodwar->getUnitsInRadius(_visibleEnemyArmy.front()->getPosition(), 1000))
     {
-      if ((unit->getType().isBuilding()) && (unit->getPlayer() == Broodwar->self()))
+      if ((unit->getPlayer() == Broodwar->self()) && (!Filter::IsWorker(unit)))
       {
         _attackPosition = _visibleEnemyArmy.front()->getPosition();
+        _isDefending = true;
         break;
       }
     }
@@ -51,47 +52,63 @@ void ArmyManager::update()
       }
     }
   }
-
-
+  /*
+  if ((_isAttacking && _lastBuildingPop + _enemyBuildingPopRate < Broodwar->getFrameCount()) &&
+       _enemyBuildings.size() > 1)
+  {
+    _enemyBuildings.pop_back();
+  }*/
 
   if (_enemyBuildings.size() != 0)
   {
-    _attackPosition = _enemyBuildings.front();
+    _attackPosition = _enemyBuildings.back();
   }
   else
   {
     _attackPosition = *_enemyBases.begin();
   }
 
+  UnderAttackCheck();
+
   if (_lastOrder + _cooldown < Broodwar->getFrameCount())
   {
     _lastOrder = Broodwar->getFrameCount();
+    Move();
+    if (_isDefending)
+    {
+      for (auto u : _army)
+      {
+        u->attack(_attackPosition);
+      }
+    }
     if (_isAttacking)
     {
-      if (_maxArmySize > 10 && _army.size() > 6)
+  /*    if (_maxArmySize > 25 && _army.size() > 6)
       {
         for (auto u : _army)
         {
           u->attack(_attackPosition);
         }
       }
-      else
+      else if (_maxArmySize < 25)
       {
-        Move();
+        for (auto u : _army)
+        {
+          u->attack(_attackPosition);
+        }
+      }*/
+      for (auto u : _army)
+      {
+        u->attack(_attackPosition);
       }
     }
-    else
-    {
-      Move();
-    }
   }
-
-  UnderAttackCheck();
+  _isDefending = false;
 }
 
 void ArmyManager::Attack()
 {
-  _isAttacking = true;
+  _isAttacking = !_isAttacking;
 }
 
 void ArmyManager::Move()
@@ -135,6 +152,13 @@ void ArmyManager::onEnemyUnitDestroy(Unit unit)
     if (it != _visibleEnemyArmy.end()) _visibleEnemyArmy.erase(it);
     return;
   }
+  
+  auto it = find(_enemyBuildings.begin(), _enemyBuildings.end(), unit->getPosition());
+  if (it != _enemyBuildings.end())
+  {
+    _enemyBuildings.erase(it);
+  }
+  
   if (unit->getType().isResourceDepot())
   {
     auto it = find(_enemyBases.begin(), _enemyBases.end(), unit->getPosition());
@@ -142,12 +166,6 @@ void ArmyManager::onEnemyUnitDestroy(Unit unit)
     {
       _enemyBases.erase(it);
     }
-  }
-
-  auto it = find(_enemyBuildings.begin(), _enemyBuildings.end(), unit->getPosition());
-  if (it != _enemyBuildings.end())
-  {
-    _enemyBuildings.erase(it);
   }
 }
 

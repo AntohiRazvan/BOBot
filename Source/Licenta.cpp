@@ -72,7 +72,7 @@ void BWBOB::onFrame()
 
   for (auto manager : _managers)
   {
-    manager->update();
+     manager->update();
   } 
  }
 
